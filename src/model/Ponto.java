@@ -1,10 +1,8 @@
 package model;
 
-
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
 
 /**
  *
@@ -14,11 +12,23 @@ public class Ponto extends Thread {
 
     private int x, y;
     private int stepSize;
-    private final JSlider slide;
+    private JSlider slide;
+    private int block;
 
     public Ponto(int x, int y) {
         this.x = x;
         this.y = y;
+        this.setUp();
+    }
+
+    public Ponto(int block) {
+        //TODO: block == 1? x=0. y=0;;
+        this(0, 0);
+        this.block = block;
+
+    }
+
+    private void setUp() {
         this.stepSize = 1;
         this.slide = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
 
@@ -40,6 +50,10 @@ public class Ponto extends Thread {
         slide.setPaintLabels(true);
     }
 
+    public int getBlock() {
+        return block;
+    }
+
     public JSlider getSlider() {
         return this.slide;
     }
@@ -48,7 +62,7 @@ public class Ponto extends Thread {
         this.stepSize = stepSize;
     }
 
-    private synchronized int getStepSize() {
+    public int getSpeed() {
         return this.stepSize;
     }
 

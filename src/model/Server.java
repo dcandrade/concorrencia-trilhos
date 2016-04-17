@@ -24,22 +24,14 @@ import java.rmi.registry.LocateRegistry;
  */
 public class Server {
 
-    public Server() {
-
-        System.out.println("Server is Online!");
-
-        try {
-            System.setProperty("java.rmi.server.hostname", "127.0.0.1");
-            LocateRegistry.createRegistry(3333);
-            Naming.rebind("Trem1", new Train());
-
-        } catch (RemoteException | MalformedURLException ex) {
-            System.err.println("Erro " + ex.toString());
-        }
+    public Server(Train train, String hostname, int port) throws RemoteException, MalformedURLException {
+        System.setProperty("java.rmi.server.hostname", hostname);
+        LocateRegistry.createRegistry(port);
+        Naming.rebind("Trem"+train.getBlock(), train);
     }
 
-    public static void main(String args[]) {
-        new Server();
+    public static void main(String args[]) throws RemoteException, MalformedURLException {
+        Server server = new Server(new Train(0), "localhost", 3333);
     }
 
 }

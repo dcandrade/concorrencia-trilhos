@@ -23,6 +23,15 @@ import java.rmi.RemoteException;
  */
 public interface TrainInterface extends Remote {
     
-    public void speedChange(int newSpeed) throws RemoteException;
+    public void setSpeed(int newSpeed) throws RemoteException;
+    
+    public int getBlock();
+    
+    public int getSpeed();
+    
+    public int getX();
+    
+    public int getY();
+    
     
 }
