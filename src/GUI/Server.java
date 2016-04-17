@@ -15,9 +15,8 @@
 package GUI;
 
 import java.rmi.Naming;
-import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
-import model.SpeedControl;
+import model.SpeedControlImpl;
 
 /**
  *
@@ -32,7 +31,7 @@ public class Server {
         try{
            System.setProperty("java.rmi.server.hostname", "127.0.0.1");
            LocateRegistry.createRegistry(3333);
-           Naming.rebind("Trem1", new SpeedControl());
+           Naming.rebind("Trem1", new SpeedControlImpl());
        
        }
        catch(Exception ex){
