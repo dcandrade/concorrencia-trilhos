@@ -14,10 +14,10 @@ import javax.swing.JFrame;
  *
  * @author solenir
  */
-public class ThreadDesenho extends JFrame {
+public class Client extends JFrame {
     private final Quadro quadro;
 
-    public ThreadDesenho() {
+    public Client() {
         Container panel = getContentPane();
         panel.setLayout(new BorderLayout());
         setSize(600, 600);
@@ -39,7 +39,7 @@ public class ThreadDesenho extends JFrame {
 
 
     public static void main(String[] args) {
-        ThreadDesenho desenho = new ThreadDesenho();
+        Client desenho = new Client();
         desenho.addWindowListener(new WindowAdapter() {
             
             @Override
@@ -49,4 +49,5 @@ public class ThreadDesenho extends JFrame {
         });
     }
 
+   
 }
