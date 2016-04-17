@@ -12,39 +12,17 @@
  * de avaliação. Alguns trechos do código podem coincidir com de outros
  * colegas pois estes foram discutidos em sessões tutorias.
  */
-package GUI;
+package util;
 
-import java.rmi.Naming;
 import java.rmi.Remote;
-import java.rmi.registry.LocateRegistry;
-import model.SpeedControl;
+import java.rmi.RemoteException;
 
 /**
  *
  * @author Daniel Andrade e Solenir Figuerêdo
  */
-public class Server {
+public interface TrainInterface extends Remote {
     
-    public Server() {
+    public void speedChange(int newSpeed) throws RemoteException;
     
-        System.out.println("Server is Online!");
-        
-        try{
-           System.setProperty("java.rmi.server.hostname", "127.0.0.1");
-           LocateRegistry.createRegistry(3333);
-           Naming.rebind("Trem1", new SpeedControl());
-       
-       }
-       catch(Exception ex){
-           System.err.println("Erro "+ex.toString());
-       }
-    }
-    
-    public static void main (String args[]){
-        new Server();
-        
-       
-    }
-    
-   
 }

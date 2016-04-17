@@ -14,7 +14,7 @@
  */
 package model;
 
-import Interface.InterfaceSpeedControl;
+import util.TrainInterface;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -22,18 +22,17 @@ import java.rmi.server.UnicastRemoteObject;
  *
  * @author Daniel Andrade e Solenir Figuerêdo
  */
-public class SpeedControl extends UnicastRemoteObject implements InterfaceSpeedControl {
+public class Train extends UnicastRemoteObject implements TrainInterface {
    
-    private Ponto trem;
+    private Ponto train;
     
-    public  SpeedControl() throws RemoteException{
+    public  Train() throws RemoteException{
         super();    
     }
    
     @Override
     public void speedChange(int newSpeed) throws RemoteException {
-        this.trem.setStepSize(newSpeed);
-    
+        this.train.setStepSize(newSpeed);
     }
     
 }

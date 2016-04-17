@@ -1,17 +1,11 @@
 package model;
 
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 /**
  *
  * @author solenir
@@ -66,14 +60,6 @@ public class Ponto extends Thread {
         return y;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
     @Override
     public void run() {
         int distance = 0;
@@ -104,8 +90,6 @@ public class Ponto extends Thread {
             } catch (Exception e) {
 
             }
-
         }
-
     }
 }
