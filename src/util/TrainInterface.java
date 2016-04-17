@@ -25,13 +25,13 @@ public interface TrainInterface extends Remote {
     
     public void setSpeed(int newSpeed) throws RemoteException;
     
-    public int getBlock();
+    public int getBlock() throws RemoteException;
     
-    public int getSpeed();
+    public int getSpeed() throws RemoteException;
     
-    public int getX();
+    public int getX() throws RemoteException;
     
-    public int getY();
+    public int getY() throws RemoteException;
     
     
 }

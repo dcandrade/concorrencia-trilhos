@@ -13,25 +13,33 @@
  */
 package model;
 
+import example.Hello;
 import java.net.MalformedURLException;
+import java.rmi.AlreadyBoundException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  *
  * @author Daniel Andrade e Solenir Figuerêdo
  */
-public class Server {
+public class Server extends UnicastRemoteObject{
 
-    public Server(Train train, String hostname, int port) throws RemoteException, MalformedURLException {
-        System.setProperty("java.rmi.server.hostname", hostname);
+    public Server(Train train, int port) throws RemoteException, MalformedURLException, AlreadyBoundException {
+        super();
         LocateRegistry.createRegistry(port);
-        Naming.rebind("Trem"+train.getBlock(), train);
+        System.setProperty("java.rmi.server.hostname", "Train" + train.getBlock());
+        //Train stub = (Train) exportObject(train, port);
+        Registry registry = LocateRegistry.getRegistry(port);
+        registry.bind("Train" + train.getBlock(), train);
+        System.err.println("Server online");
     }
 
-    public static void main(String args[]) throws RemoteException, MalformedURLException {
-        Server server = new Server(new Train(0), "localhost", 3333);
+    public static void main(String args[]) throws RemoteException, MalformedURLException, AlreadyBoundException {
+        Server server = new Server(new Train(1), 3333);
     }
 
 }
