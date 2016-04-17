@@ -12,17 +12,28 @@
  * de avaliação. Alguns trechos do código podem coincidir com de outros
  * colegas pois estes foram discutidos em sessões tutorias.
  */
-package Interface;
+package model;
 
-import java.rmi.Remote;
+import Interface.InterfaceSpeedControl;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  *
  * @author Daniel Andrade e Solenir Figuerêdo
  */
-public interface InterfaceControl extends Remote {
+public class SpeedControl extends UnicastRemoteObject implements InterfaceSpeedControl {
+   
+    private Ponto trem;
     
-    public void speedChange(int newSpeed) throws RemoteException;
+    public  SpeedControl() throws RemoteException{
+        super();    
+    }
+   
+    @Override
+    public void speedChange(int newSpeed) throws RemoteException {
+        this.trem.setStepSize(newSpeed);
+    
+    }
     
 }
