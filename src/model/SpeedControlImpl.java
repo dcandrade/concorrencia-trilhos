@@ -22,11 +22,11 @@ import java.rmi.server.UnicastRemoteObject;
  *
  * @author Daniel Andrade e Solenir Figuerêdo
  */
-public class SpeedControl extends UnicastRemoteObject implements InterfaceSpeedControl {
+public class SpeedControlImpl extends UnicastRemoteObject implements InterfaceSpeedControl {
    
     private Ponto trem;
     
-    public  SpeedControl() throws RemoteException{
+    public  SpeedControlImpl() throws RemoteException{
         super();    
     }
    

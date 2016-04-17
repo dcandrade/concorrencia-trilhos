@@ -36,13 +36,13 @@ public class Server {
        
        }
        catch(Exception ex){
-           System.err.println("Erro "+ex.toString());
+           
        }
     }
     
     public static void main (String args[]){
         new Server();
-        
+         
        
     }
     
