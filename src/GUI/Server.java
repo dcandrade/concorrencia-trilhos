@@ -31,7 +31,7 @@ public class Server {
         try{
            System.setProperty("java.rmi.server.hostname", "127.0.0.1");
            LocateRegistry.createRegistry(3333);
-           Naming.rebind("Trem1", new SpeedControlImpl());
+           Naming.rebind("Train1", new SpeedControlImpl());
        
        }
        catch(Exception ex){
