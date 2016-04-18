@@ -9,21 +9,22 @@ import javax.swing.event.ChangeListener;
  * @author solenir
  */
 public class Ponto extends Thread {
-
+    private int numberComparison;
     private int x, y;
     private int stepSize;
     private JSlider slide;
     private int block;
 
-    public Ponto(int x, int y) {
+    public Ponto(int x, int y, int numberComparison) {
+        this.numberComparison = numberComparison;
         this.x = x;
         this.y = y;
         this.setUp();
     }
-
+    //Coloquei o valor só para ter compatibilidade
     public Ponto(int block) {
         //TODO: block == 1? x=0. y=0;;
-        this(0, 0);
+        this(0, 0,0);
         this.block = block;
 
     }
@@ -53,7 +54,9 @@ public class Ponto extends Thread {
     public int getBlock() {
         return block;
     }
-
+    public void setNumberComparison(int numberComparison){
+        this.numberComparison = numberComparison;
+    }
     public JSlider getSlider() {
         return this.slide;
     }
@@ -62,7 +65,7 @@ public class Ponto extends Thread {
         this.stepSize = stepSize;
     }
 
-    public int getSpeed() {
+    private synchronized int getStepSize() {
         return this.stepSize;
     }
 
@@ -74,29 +77,37 @@ public class Ponto extends Thread {
         return y;
     }
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     @Override
     public void run() {
-        int distance = 0;
+         int distance = 0;
         while (true) {
-
-            if (distance < 250) {
+            
+            if (distance < 200) {
                 x += this.stepSize;
                 distance += this.stepSize;
-            } else if (distance < 500) {
+                
+            } else if (distance < 400 - numberComparison) {
                 y += this.stepSize;
                 distance += this.stepSize;
-            } else if (distance < 750) {
+            } else if (distance < 600-numberComparison) {
                 x -= this.stepSize;
                 distance += this.stepSize;
-            } else if (distance < 1000) {
+            } else if (distance < 800-numberComparison) {
                 y -= this.stepSize;
                 distance += this.stepSize;
             }
-
-            if (distance >= 1000) {
-                distance = 0;
-                x = 0;
-                y = 0;
+            
+            if(distance >= 800-numberComparison*2){
+                distance=0;
+                 
             }
 
             try {
@@ -104,6 +115,12 @@ public class Ponto extends Thread {
             } catch (Exception e) {
 
             }
+
         }
+
+    }
+
+    public int getSpeed() {
+        return this.stepSize;
     }
 }

@@ -16,18 +16,12 @@ public class Quadro extends JPanel implements Runnable {
 
     private final Color cor;
     private final List<Ponto> points;
-    public static int REFRESH_RATE = 10;
-    private final int x0, y0, w, h;
-    
-    public Quadro(Color color, int x0, int y0, int w, int h) {
+    public static int REFRESH_RATE = 15;
+
+    public Quadro(Color blue) {
         this.points = new ArrayList<>();
         repaint();
-        this.cor = color;
-        
-        this.x0=x0;
-        this.y0=y0;
-        this.w=w;
-        this.h=h;
+        this.cor = blue;
     }
 
     public void startPoints() {
@@ -36,8 +30,8 @@ public class Quadro extends JPanel implements Runnable {
         }
     }
     
-    public void insertPoint(int x, int y){
-        this.points.add((new Ponto(x,y)));
+    public void insertPoint(int x, int y, int numberComparison){
+        this.points.add((new Ponto(x,y, numberComparison)));
     }
     
     
@@ -53,7 +47,9 @@ public class Quadro extends JPanel implements Runnable {
         for (Ponto ponto : this.points) {
             g.fillOval(ponto.getX(), ponto.getY(), 10, 10);
         }
-        g.drawRect(x0, y0, w, h);
+        g.drawRect(400, 50, 200, 130);
+        g.drawRect(300,180, 200, 200);
+        g.drawRect(500,180, 200, 200);
     }
 
     @Override
@@ -62,7 +58,7 @@ public class Quadro extends JPanel implements Runnable {
         this.repaint();
         while(true){
             try {
-                sleep(Quadro.REFRESH_RATE);
+                sleep(Quadro.REFRESH_RATE-5);
                 this.repaint();
             } catch (InterruptedException ex) {
             }

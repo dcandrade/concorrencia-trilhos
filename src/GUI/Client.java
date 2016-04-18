@@ -1,11 +1,12 @@
 package GUI;
 
-
 import model.Quadro;
 import model.Ponto;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
@@ -18,20 +19,25 @@ public class Client extends JFrame {
     private final Quadro quadro;
 
     public Client() {
-        Container panel = getContentPane();
+         Container panel = getContentPane();
         panel.setLayout(new BorderLayout());
-        setSize(600, 600);
-        panel.setBounds(350, 350, 350, 350);
-        this.quadro = new Quadro(Color.blue, 4, 4, 250, 250);
-        panel.add(quadro, BorderLayout.CENTER);
+        setSizeJFrame(1000, 700);
+        panel.setBounds(400, 400, 400, 400);
+        this.quadro = new Quadro(Color.blue);
+        panel.add(quadro);
         setContentPane(panel);
         panel.setVisible(true);
         
         this.quadro.repaint();
-        Ponto point = new Ponto(0, 0);
+        Ponto trainOne = new Ponto(395, 45,70);
+        Ponto trainTwo = new Ponto(295, 175,0);
+        Ponto trainThree = new Ponto(495,175,0);
         
-        this.quadro.insertPoint(point);
-        panel.add(point.getSlider(), BorderLayout.SOUTH);
+        this.quadro.insertPoint(trainOne);
+        this.quadro.insertPoint(trainTwo);
+        this.quadro.insertPoint(trainThree);
+        
+        panel.add(trainOne.getSlider(), BorderLayout.SOUTH);
         setVisible(true);
         Thread t = new Thread(this.quadro);
         t.start();
@@ -49,5 +55,30 @@ public class Client extends JFrame {
         });
     }
 
+    
+    /**
+     * Método que modifica o tamanho da janela da aplicação e a centraliza na
+     * tela do PC.
+     * 
+     * @param x Int com a largura da janela.
+     * @param y Int com a altura da janela.
+     */
+    public void setSizeJFrame(int x, int y) {
+        
+        setSize(x, y);
+        Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
+        setLocation((tela.width-x)/2, (tela.height-y)/2);
+    }
+    
+    /**
+     * Método que modifica a visibilidade da janela da aplicação.
+     * 
+     * @param b True, se visível. False, se invisível.
+     */
+    public void setVisibleJFrame(boolean b) {
+        
+       setVisible(b);
+    }
+    
    
 }
