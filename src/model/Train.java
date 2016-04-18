@@ -36,10 +36,6 @@ public class Train extends UnicastRemoteObject implements ITrain {
         this.train.start();
     }
 
-    @Override
-    public JSlider getSlider() throws RemoteException {
-        return this.train.getSlider();
-    }
     
     @Override
     public void setSpeed(int newSpeed) throws RemoteException {

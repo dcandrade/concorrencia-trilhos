@@ -16,7 +16,6 @@ package util;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import javax.swing.JSlider;
 
 /**
  *
@@ -35,6 +34,4 @@ public interface ITrain extends Remote {
     public int getY() throws RemoteException;
     
     public void start() throws RemoteException;
-    
-    public JSlider getSlider() throws RemoteException;
-}
+ }
