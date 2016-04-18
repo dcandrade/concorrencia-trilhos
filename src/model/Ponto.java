@@ -9,22 +9,27 @@ import javax.swing.event.ChangeListener;
  * @author solenir
  */
 public class Ponto extends Thread {
+
     private int numberComparison;
-    private int x, y;
+    private int x, x0, y, y0;
     private int stepSize;
     private JSlider slide;
     private int block;
 
     public Ponto(int x, int y, int numberComparison) {
         this.numberComparison = numberComparison;
+        this.x0 = x;
+        this.y0 = y;
         this.x = x;
         this.y = y;
         this.setUp();
     }
+
     //Coloquei o valor só para ter compatibilidade
+
     public Ponto(int block) {
         //TODO: block == 1? x=0. y=0;;
-        this(0, 0,0);
+        this(0, 0, 0);
         this.block = block;
 
     }
@@ -54,9 +59,11 @@ public class Ponto extends Thread {
     public int getBlock() {
         return block;
     }
-    public void setNumberComparison(int numberComparison){
+
+    public void setNumberComparison(int numberComparison) {
         this.numberComparison = numberComparison;
     }
+
     public JSlider getSlider() {
         return this.slide;
     }
@@ -87,37 +94,37 @@ public class Ponto extends Thread {
 
     @Override
     public void run() {
-         int distance = 0;
+        int distance = 0;
         while (true) {
-            
+
             if (distance < 200) {
                 x += this.stepSize;
                 distance += this.stepSize;
-                
             } else if (distance < 400 - numberComparison) {
                 y += this.stepSize;
                 distance += this.stepSize;
-            } else if (distance < 600-numberComparison) {
+            } else if (distance < 600 - numberComparison) {
                 x -= this.stepSize;
                 distance += this.stepSize;
-            } else if (distance < 800-numberComparison) {
+            } else if (distance < 800 - numberComparison) {
                 y -= this.stepSize;
                 distance += this.stepSize;
             }
-            
-            if(distance >= 800-numberComparison*2){
-                distance=0;
-                 
+
+            if (distance >= 800 - numberComparison * 2) {
+                distance = 0;
+                
+                //Reset the initial position
+                this.x=this.x0;
+                this.y=this.y0;
             }
 
             try {
                 sleep(Quadro.REFRESH_RATE);
             } catch (Exception e) {
-
+                System.out.println("Exception: " + e.getMessage());
             }
-
         }
-
     }
 
     public int getSpeed() {
