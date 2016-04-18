@@ -1,7 +1,7 @@
 package GUI;
 
 import model.Quadro;
-import model.Ponto;
+import model.Point;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -9,7 +9,13 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import javax.swing.JFrame;
+import model.Train;
+import util.ITrain;
 
 /**
  *
@@ -19,7 +25,7 @@ public class Client extends JFrame {
 
     private final Quadro quadro;
 
-    public Client() {
+    public Client() throws RemoteException, NotBoundException {
         Container panel = getContentPane();
         panel.setLayout(new BorderLayout());
         setSizeJFrame(1000, 700);
@@ -30,21 +36,26 @@ public class Client extends JFrame {
         panel.setVisible(true);
 
         this.quadro.repaint();
-        Ponto trainOne = new Ponto(395, 45, 70);
-        Ponto trainTwo = new Ponto(295, 175, 0);
-        Ponto trainThree = new Ponto(495, 175, 0);
+        Train trainOne = new Train(Point.UPPER_BLOCK);
+        trainOne.start();
+        Train trainTwo = new Train(Point.DOWN_LEFT_BLOCK);
+        trainTwo.start();
+        
+        Registry registry = LocateRegistry.getRegistry(3333);
+        ITrain trainThree = (ITrain) registry.lookup("Train"+Point.DOWN_RIGHT_BLOCK);
 
         this.quadro.insertPoint(trainOne);
         this.quadro.insertPoint(trainTwo);
         this.quadro.insertPoint(trainThree);
 
-        panel.add(trainOne.getSlider(), BorderLayout.SOUTH);
+        panel.add(trainThree.getSlider(), BorderLayout.SOUTH);
+
         setVisible(true);
         Thread t = new Thread(this.quadro);
         t.start();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RemoteException, NotBoundException {
         Client desenho = new Client();
         desenho.addWindowListener(new WindowAdapter() {
 

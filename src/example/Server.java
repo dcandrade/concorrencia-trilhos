@@ -11,9 +11,7 @@ package example;
  */
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import example.Hello;
         
 public class Server implements Hello {
         

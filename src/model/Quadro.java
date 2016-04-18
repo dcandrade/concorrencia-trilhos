@@ -1,12 +1,15 @@
 package model;
 
-
 import java.awt.Color;
 import java.awt.Graphics;
 import static java.lang.Thread.sleep;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
+import util.ITrain;
 
 /**
  *
@@ -15,7 +18,7 @@ import javax.swing.JPanel;
 public class Quadro extends JPanel implements Runnable {
 
     private final Color cor;
-    private final List<Ponto> points;
+    private final List<ITrain> points;
     public static int REFRESH_RATE = 15;
 
     public Quadro(Color blue) {
@@ -24,18 +27,13 @@ public class Quadro extends JPanel implements Runnable {
         this.cor = blue;
     }
 
-    public void startPoints() {
-        for (Ponto ponto : this.points) {
+    public void startPoints() throws RemoteException {
+        for (ITrain ponto : this.points) {
             ponto.start();
         }
     }
-    
-    public void insertPoint(int x, int y, int numberComparison){
-        this.points.add((new Ponto(x,y, numberComparison)));
-    }
-    
-    
-    public void insertPoint(Ponto point){
+
+    public void insertPoint(ITrain point) {
         this.points.add(point);
     }
 
@@ -43,25 +41,32 @@ public class Quadro extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(cor);
-        
-        for (Ponto ponto : this.points) {
-            g.fillOval(ponto.getX(), ponto.getY(), 10, 10);
+
+        for (ITrain ponto : this.points) {
+            try {
+                g.fillOval(ponto.getX(), ponto.getY(), 10, 10);
+            } catch (RemoteException ex) {
+                Logger.getLogger(Quadro.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         g.drawRect(400, 50, 200, 130);
-        g.drawRect(300,180, 200, 200);
-        g.drawRect(500,180, 200, 200);
+        g.drawRect(300, 180, 200, 200);
+        g.drawRect(500, 180, 200, 200);
     }
 
     @Override
     public void run() {
-        this.startPoints();
-        this.repaint();
-        while(true){
-            try {
-                sleep(Quadro.REFRESH_RATE-5);
+        try {
+            //this.startPoints();
+            this.repaint();
+            
+            while (true) {
+                sleep(Quadro.REFRESH_RATE - 5);
                 this.repaint();
-            } catch (InterruptedException ex) {
+
             }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Quadro.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

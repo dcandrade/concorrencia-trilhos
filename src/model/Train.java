@@ -13,27 +13,32 @@
  */
 package model;
 
-import util.TrainInterface;
+import util.ITrain;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import javax.swing.JSlider;
 
 /**
  *
  * @author Daniel Andrade e Solenir Figuerêdo
  */
-public class Train extends UnicastRemoteObject implements TrainInterface {
+public class Train extends UnicastRemoteObject implements ITrain {
 
-    private Ponto train;
-    public static final int DOWN_LEFT_BLOCK = 1;
-    public static final int DOWN_RIGHT_BLOCK = 2;
-    public static final int UPPER_BLOCK = 3;
+    private final Point train;
 
     public Train(int trainBlock) throws RemoteException {
         super();
-        if (trainBlock > 3 || trainBlock < 1) {
-            throw new IllegalArgumentException("Invalid block");
-        }
-        this.train = new Ponto(trainBlock);
+        this.train = new Point(trainBlock);
+    }
+
+    @Override
+    public void start() throws RemoteException {
+        this.train.start();
+    }
+
+    @Override
+    public JSlider getSlider() throws RemoteException {
+        return this.train.getSlider();
     }
     
     @Override

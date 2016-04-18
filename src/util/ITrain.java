@@ -16,12 +16,13 @@ package util;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import javax.swing.JSlider;
 
 /**
  *
  * @author Daniel Andrade e Solenir Figuerêdo
  */
-public interface TrainInterface extends Remote {
+public interface ITrain extends Remote {
     
     public void setSpeed(int newSpeed) throws RemoteException;
     
@@ -33,5 +34,7 @@ public interface TrainInterface extends Remote {
     
     public int getY() throws RemoteException;
     
+    public void start() throws RemoteException;
     
+    public JSlider getSlider() throws RemoteException;
 }

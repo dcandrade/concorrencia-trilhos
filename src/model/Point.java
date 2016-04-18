@@ -8,30 +8,39 @@ import javax.swing.event.ChangeListener;
  *
  * @author solenir
  */
-public class Ponto extends Thread {
+public class Point extends Thread {
+
+    public static final int DOWN_LEFT_BLOCK = 3;
+    public static final int DOWN_RIGHT_BLOCK = 2;
+    public static final int UPPER_BLOCK = 1;
 
     private int numberComparison;
     private int x, x0, y, y0;
     private int stepSize;
     private JSlider slide;
-    private int block;
+    private final int block;
 
-    public Ponto(int x, int y, int numberComparison) {
-        this.numberComparison = numberComparison;
-        this.x0 = x;
-        this.y0 = y;
-        this.x = x;
-        this.y = y;
-        this.setUp();
-    }
-
-    //Coloquei o valor só para ter compatibilidade
-
-    public Ponto(int block) {
-        //TODO: block == 1? x=0. y=0;;
-        this(0, 0, 0);
+    public Point(int block) {
+        if (block == Point.UPPER_BLOCK) {
+            this.x0 = 395;
+            this.y0 = 45;
+            this.numberComparison = 70;
+        } else if (block == Point.DOWN_LEFT_BLOCK) {
+            this.x0 = 295;
+            this.y0 = 175;
+            this.numberComparison = 0;
+        } else if (block == Point.DOWN_RIGHT_BLOCK) {
+            this.x0 = 495;
+            this.y0 = 175;
+            this.numberComparison = 0;
+        }else{
+             throw new IllegalArgumentException("Invalid block number");
+        }
+        
         this.block = block;
-
+        this.x = x0;
+        this.y = y0;
+        this.setUp();
     }
 
     private void setUp() {
@@ -113,10 +122,10 @@ public class Ponto extends Thread {
 
             if (distance >= 800 - numberComparison * 2) {
                 distance = 0;
-                
+
                 //Reset the initial position
-                this.x=this.x0;
-                this.y=this.y0;
+                this.x = this.x0;
+                this.y = this.y0;
             }
 
             try {

@@ -13,10 +13,8 @@
  */
 package model;
 
-import example.Hello;
 import java.net.MalformedURLException;
 import java.rmi.AlreadyBoundException;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -31,7 +29,7 @@ public class Server extends UnicastRemoteObject{
     public Server(Train train, int port) throws RemoteException, MalformedURLException, AlreadyBoundException {
         super();
         LocateRegistry.createRegistry(port);
-        System.setProperty("java.rmi.server.hostname", "Train" + train.getBlock());
+        System.setProperty("java.rmi.server.hostname", "10.0.0.101");
         //Train stub = (Train) exportObject(train, port);
         Registry registry = LocateRegistry.getRegistry(port);
         registry.bind("Train" + train.getBlock(), train);
@@ -39,7 +37,10 @@ public class Server extends UnicastRemoteObject{
     }
 
     public static void main(String args[]) throws RemoteException, MalformedURLException, AlreadyBoundException {
-        Server server = new Server(new Train(1), 3333);
+        Train t = new Train(Point.DOWN_RIGHT_BLOCK);
+        t.start();
+        Server server = new Server(t, 3333);
+        
     }
 
 }
