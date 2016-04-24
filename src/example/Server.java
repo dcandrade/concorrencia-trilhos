@@ -25,7 +25,7 @@ public class Server implements Hello {
     public static void main(String args[]) {
         
         try {
-                    LocateRegistry.createRegistry(1234);
+            LocateRegistry.createRegistry(1234);
 
             Server obj = new Server();
             Hello stub = (Hello) UnicastRemoteObject.exportObject(obj, 0);

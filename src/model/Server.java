@@ -24,7 +24,7 @@ import java.rmi.server.UnicastRemoteObject;
  *
  * @author Daniel Andrade e Solenir Figuerêdo
  */
-public class Server extends UnicastRemoteObject{
+public class Server{
 
     public Server(Train train, int port) throws RemoteException, MalformedURLException, AlreadyBoundException {
         super();
