@@ -24,12 +24,12 @@ import java.rmi.server.UnicastRemoteObject;
  *
  * @author Daniel Andrade e Solenir Figuerêdo
  */
-public class Server{
+public class Server extends UnicastRemoteObject{
 
     public Server(Train train, int port) throws RemoteException, MalformedURLException, AlreadyBoundException {
         super();
         LocateRegistry.createRegistry(port);
-        System.setProperty("java.rmi.server.hostname", "10.0.0.101");
+        System.setProperty("java.rmi.server.hostname", "127.0.0.1");
         //Train stub = (Train) exportObject(train, port);
         Registry registry = LocateRegistry.getRegistry(port);
         registry.bind("Train" + train.getBlock(), train);

@@ -22,6 +22,8 @@ public class Quadro extends JPanel implements Runnable {
     public static int REFRESH_RATE = 15;
 
     public Quadro(Color blue) {
+        setLayout(null);
+        setSize(994, 672);
         this.points = new ArrayList<>();
         repaint();
         this.cor = blue;
@@ -49,9 +51,13 @@ public class Quadro extends JPanel implements Runnable {
                 Logger.getLogger(Quadro.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
         g.drawRect(400, 50, 200, 130);
         g.drawRect(300, 180, 200, 200);
         g.drawRect(500, 180, 200, 200);
+    }
+    public List<ITrain> getList(){
+    	return points;
     }
 
     @Override

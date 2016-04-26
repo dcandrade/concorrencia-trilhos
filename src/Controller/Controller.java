@@ -15,11 +15,11 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.TreeMap;
-import model.Server;
+
 import model.Train;
+import util.ITrain;
 
 /**
  *
@@ -27,39 +27,52 @@ import model.Train;
  */
 public class Controller {
 
-    private static final int PORT = 3333;
+    private  int PORT = 3333;
     private static final int NUM_TRAINS = 3;
-    private final Server server;
+   
     private final Train myTrain;
-    private final TreeMap<Integer, Train> trains;
+    private final TreeMap<Integer, ITrain> trains;
 
-    public Controller(int trainBlock) throws RemoteException, MalformedURLException, AlreadyBoundException {
+    public Controller(Train myTrain) throws AlreadyBoundException, FileNotFoundException, IOException {
         this.trains = new TreeMap<>();
-        this.myTrain = new Train(trainBlock);
-        this.server = new Server(this.myTrain, PORT);
-        this.trains.put(trainBlock, myTrain);
+        this.myTrain = myTrain;
+        loadTrains();
     }
+   
 
-    private boolean addTrain(String hostname) throws RemoteException {
+    private boolean addTrain(String hostname, int key) throws RemoteException {
         try {
-            Registry registry = LocateRegistry.getRegistry(PORT);
-            Train train = (Train) registry.lookup(hostname);
-            this.trains.put(train.getBlock(), train);
-            
-            return true;
+        	if (key == 1){
+	            Registry registry = LocateRegistry.getRegistry(3333);
+	            ITrain train = (ITrain) registry.lookup(hostname);
+	            this.trains.put(train.getBlock(), train);
+	            return true;
+        	}
+        	else if (key == 2){
+    	            Registry registry = LocateRegistry.getRegistry(3334);
+    	            ITrain train = (ITrain) registry.lookup(hostname);
+    	            this.trains.put(train.getBlock(), train);
+    	            return true;
+            	}
+        	else if (key == 3){
+	            Registry registry = LocateRegistry.getRegistry(3335);
+	            ITrain train = (ITrain) registry.lookup(hostname);
+	            this.trains.put(train.getBlock(), train);
+	            return true;
+        	}
+        	return false;
         } catch (NotBoundException | AccessException ex) {
             return false;
         }
     }
     
-    
     private void loadTrains() throws FileNotFoundException, IOException{
         String hostname;
         
-        for (int i = 0; i < Controller.NUM_TRAINS; i++) {
+        for (int i = 1; i < Controller.NUM_TRAINS; i++) {
             if(i != this.myTrain.getBlock()){
-                hostname = "Trem"+i;
-                boolean addTrain = this.addTrain(hostname);
+                hostname = "Train"+i;
+                boolean addTrain = this.addTrain(hostname, i);
                 
                 if(!addTrain){
                     throw new NoSuchObjectException("Train #"+i+" not found");
@@ -71,4 +84,17 @@ public class Controller {
     public void setSpeed(int block, int speed) throws RemoteException{
         this.trains.get(block).setSpeed(speed);
     }
+
+	public int getAmountRemoteObject() throws FileNotFoundException, IOException {
+				
+		return trains.size() ;
+		
+	}
+	
+	public TreeMap<Integer, ITrain> getTreeMap(){
+		return trains;
+	}
+
+	
+		
 }

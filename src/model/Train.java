@@ -22,7 +22,7 @@ import javax.swing.JSlider;
  *
  * @author Daniel Andrade e Solenir Figuerêdo
  */
-public class Train extends UnicastRemoteObject implements ITrain {
+public class Train implements ITrain, Comparable {
 
     private final Point train;
 
@@ -61,5 +61,22 @@ public class Train extends UnicastRemoteObject implements ITrain {
     public int getY() {
         return this.train.getY();
     }
+
+	@Override
+	public int compareTo(Object o) {
+		if (getBlock() > (Integer)o)
+            return 1;
+        else
+            if (getBlock() < (Integer) o)
+                return -1;
+        return 0;
+	}
+	@Override
+	public boolean equals(Object o){
+		return train.getBlock() == ((Train)o).getBlock();
+		
+	}
+    
+    
 
 }

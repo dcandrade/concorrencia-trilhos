@@ -19,6 +19,7 @@ public class Point extends Thread {
     private int stepSize;
     private JSlider slide;
     private final int block;
+    private int logicValue;
 
     public Point(int block) {
         if (block == Point.UPPER_BLOCK) {
