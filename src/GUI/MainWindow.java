@@ -43,7 +43,7 @@ public class MainWindow {
     public MainWindow(String title, int trainBlock) throws AlreadyBoundException, IOException, RemoteException, NotBoundException {
         this.frame = new JFrame(title);
         this.facade = new Facade(trainBlock);
-        this.client = new Client();
+        this.client = new Client(trainBlock);
         this.container = new JPanel(new BorderLayout());
 
         this.container.add(client.getRail(), BorderLayout.CENTER);

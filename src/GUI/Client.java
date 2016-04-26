@@ -22,9 +22,9 @@ public class Client {
     private final Rail railFrame;
     private final JPanel sliderFrame;
 
-    public Client() throws AlreadyBoundException, IOException {
+    public Client(int trainBlock) throws AlreadyBoundException, IOException {
         super();
-        this.railFrame = new Rail(Color.blue);
+        this.railFrame = new Rail(Color.blue, trainBlock);
         this.sliderFrame = new JPanel(new GridLayout(Controller.NUM_TRAINS, 1));
         this.sliderFrame.setVisible(true);
     }
