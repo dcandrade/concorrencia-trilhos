@@ -1,14 +1,10 @@
 package model;
 
-import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 /**
  *
  * @author solenir
  */
-public class Point extends Thread {
+public class TrainEngine extends Thread {
 
     public static final int DOWN_LEFT_BLOCK = 3;
     public static final int DOWN_RIGHT_BLOCK = 2;
@@ -17,20 +13,18 @@ public class Point extends Thread {
     private int numberComparison;
     private int x, x0, y, y0;
     private int stepSize;
-    private JSlider slide;
     private final int block;
-    private int logicValue;
 
-    public Point(int block) {
-        if (block == Point.UPPER_BLOCK) {
+    public TrainEngine(int block) {
+        if (block == TrainEngine.UPPER_BLOCK) {
             this.x0 = 395;
             this.y0 = 45;
             this.numberComparison = 70;
-        } else if (block == Point.DOWN_LEFT_BLOCK) {
+        } else if (block == TrainEngine.DOWN_LEFT_BLOCK) {
             this.x0 = 295;
             this.y0 = 175;
             this.numberComparison = 0;
-        } else if (block == Point.DOWN_RIGHT_BLOCK) {
+        } else if (block == TrainEngine.DOWN_RIGHT_BLOCK) {
             this.x0 = 495;
             this.y0 = 175;
             this.numberComparison = 0;
@@ -41,30 +35,9 @@ public class Point extends Thread {
         this.block = block;
         this.x = x0;
         this.y = y0;
-        this.setUp();
-    }
-
-    private void setUp() {
         this.stepSize = 1;
-        this.slide = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
-
-        this.slide.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                JSlider j = (JSlider) e.getSource();
-                if (!j.getValueIsAdjusting()) {
-                    setStepSize((int) j.getValue());
-                }
-
-            }
-        });
-
-        slide.setMajorTickSpacing(1);
-        slide.setMinorTickSpacing(1);
-        slide.setPaintTicks(true);
-        slide.setPaintLabels(true);
     }
+
 
     public int getBlock() {
         return block;
@@ -74,16 +47,8 @@ public class Point extends Thread {
         this.numberComparison = numberComparison;
     }
 
-    public JSlider getSlider() {
-        return this.slide;
-    }
-
     protected synchronized void setStepSize(int stepSize) {
         this.stepSize = stepSize;
-    }
-
-    private synchronized int getStepSize() {
-        return this.stepSize;
     }
 
     public int getX() {
@@ -132,7 +97,7 @@ public class Point extends Thread {
             try {
                 sleep(Rail.REFRESH_RATE);
             } catch (Exception e) {
-                System.out.println("Exception: " + e.getMessage());
+                System.out.println("Erron on Point: " + e.getMessage());
             }
         }
     }

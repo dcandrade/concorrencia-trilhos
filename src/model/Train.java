@@ -23,12 +23,12 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class Train extends UnicastRemoteObject implements ITrain, Comparable<Train> {
 
-    private final Point train;
+    private final TrainEngine train;
     private boolean ready;
 
     public Train(int trainBlock) throws RemoteException {
         super();
-        this.train = new Point(trainBlock);
+        this.train = new TrainEngine(trainBlock);
     }
 
     @Override

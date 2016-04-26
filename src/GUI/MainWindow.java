@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import model.Point;
+import model.TrainEngine;
 import util.ITrain;
 
 /**
@@ -97,7 +97,7 @@ public class MainWindow {
 
     
     public static void main(String[] args) throws AlreadyBoundException, IOException, RemoteException, NotBoundException {
-        MainWindow mainWindow = new MainWindow("nome", Point.UPPER_BLOCK);
+        MainWindow mainWindow = new MainWindow("nome", TrainEngine.UPPER_BLOCK);
     }
 
 }
