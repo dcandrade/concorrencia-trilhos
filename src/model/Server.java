@@ -24,23 +24,42 @@ import java.rmi.server.UnicastRemoteObject;
  *
  * @author Daniel Andrade e Solenir Figuerêdo
  */
-public class Server extends UnicastRemoteObject{
+public class Server extends UnicastRemoteObject implements Runnable {
+
+    private final int port;
+    private final Train train;
 
     public Server(Train train, int port) throws RemoteException, MalformedURLException, AlreadyBoundException {
         super();
-        LocateRegistry.createRegistry(port);
-        System.setProperty("java.rmi.server.hostname", "127.0.0.1");
-        //Train stub = (Train) exportObject(train, port);
-        Registry registry = LocateRegistry.getRegistry(port);
-        registry.bind("Train" + train.getBlock(), train);
-        System.err.println("Server online");
+        this.train = train;
+        this.port = port;
+    }
+    
+    public void start(){
+        Thread thread = new Thread(this);
+        thread.start();
     }
 
+    @Override
+    public void run() {
+        try {
+            LocateRegistry.createRegistry(port);
+            System.setProperty("java.rmi.server.hostname", "127.0.0.1");
+            Registry registry = LocateRegistry.getRegistry(port);
+            registry.bind("Train" + train.getBlock(), train);
+            System.err.println("Server online");
+        } catch (RemoteException | AlreadyBoundException ex) {
+            System.err.println("Error while starting server");
+            System.err.println(ex.getLocalizedMessage());
+        }
+    }
+    
+    
     public static void main(String args[]) throws RemoteException, MalformedURLException, AlreadyBoundException {
         Train t = new Train(Point.DOWN_RIGHT_BLOCK);
         t.start();
         Server server = new Server(t, 3333);
-        
+        server.start();
     }
 
 }

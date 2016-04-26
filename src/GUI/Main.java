@@ -1,6 +1,8 @@
-
 package GUI;
 
+import java.net.MalformedURLException;
+import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -16,72 +18,39 @@ import util.ITrain;
  * @author solenir
  */
 public class Main {
-	private ITrain myTrain;
-	private Thread threadServer;
-	private Thread threadClient;
+
+    private ITrain myTrain;
+    private Thread threadServer;
+    private static Thread threadClient;
     private MainWindow window;
     private static final int PORT = 3335;
-	
-    public Main () throws RemoteException{
-    	this.myTrain = new Train(Point.DOWN_LEFT_BLOCK);
-    	this.threadServer = new Thread(new Server());
-    	this.threadServer.start();
-    	
+
+    public Main() throws RemoteException {
+        this.myTrain = new Train(Point.DOWN_RIGHT_BLOCK);
+        this.threadServer = new Thread(new Server());
+       // this.threadServer.start();
+
     }
-    
-    public static void  main(String args[]) throws RemoteException{
-    	new Main();   
-    
+
+    public static void main(String args[]) throws RemoteException {
+        threadClient = new Thread(new Client());
+                threadClient.start();
+
     }
-        
-    
+
     class Client implements Runnable {
-  
-    	@Override
-    	public void run() {
-    		try {
-				window = new MainWindow("Collision Train", myTrain);
-				
-				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            
-            
-    		
-    	}
+
+        @Override
+        public void run() {
+            try {
+                window = new MainWindow("Collision Train", myTrain);
+
+            } catch (RemoteException | NotBoundException | MalformedURLException | AlreadyBoundException e) {
+                System.err.println(e.getMessage());
+            }
+
+        }
     }
 
-    class Server implements Runnable {
 
-    	public Server(){
-    		
-    	}
-
-    	@Override
-    	public void run()  {
-    		
-     		 try {
-				LocateRegistry.createRegistry(PORT);
-				ITrain stub = (ITrain) UnicastRemoteObject.exportObject(myTrain, 0);
-	    	    //Train stub = (Train) exportObject(train, port);
-	    	    Registry registry = LocateRegistry.getRegistry(PORT);
-	    	    registry.bind("Train" + myTrain.getBlock(), stub);
-	    	    System.out.println("Server online");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    		finally {
-    			threadClient = new Thread(new Client());
-    	    	threadClient.start();
-				
-			}
-    	     		    		
-    	}
-    }
-    
-    
 }
-

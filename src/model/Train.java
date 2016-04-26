@@ -16,16 +16,16 @@ package model;
 import util.ITrain;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import javax.swing.JSlider;
 
 /**
  *
  * @author Daniel Andrade e Solenir Figuerêdo
  */
-public class Train implements ITrain, Comparable {
+public class Train extends UnicastRemoteObject implements ITrain, Comparable<Train> {
 
     private final Point train;
     private boolean ready;
+
     public Train(int trainBlock) throws RemoteException {
         super();
         this.train = new Point(trainBlock);
@@ -36,14 +36,13 @@ public class Train implements ITrain, Comparable {
         this.train.start();
     }
 
-    
     @Override
     public void setSpeed(int newSpeed) throws RemoteException {
         this.train.setStepSize(newSpeed);
     }
 
     @Override
-    public int getBlock() {
+    public Integer getBlock() {
         return this.train.getBlock();
     }
 
@@ -62,31 +61,29 @@ public class Train implements ITrain, Comparable {
         return this.train.getY();
     }
 
-	@Override
-	public int compareTo(Object o) {
-		if (getBlock() > (Integer)o)
-            return 1;
-        else
-            if (getBlock() < (Integer) o)
-                return -1;
-        return 0;
-	}
-	@Override
-	public boolean equals(Object o){
-		return train.getBlock() == ((Train)o).getBlock();
-		
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Train) {
+            return ((Train) o).compareTo(this) == 0;
+        }
+        
+        return false;
+    }
 
-	@Override
-	public boolean noIsReady() throws RemoteException {
-		
-		return this.ready;
-	}
-	
-	@Override
-	public void setReady()throws RemoteException {
-		this.ready = true;
-	}
-    
+    @Override
+    public boolean noIsReady() throws RemoteException {
+
+        return this.ready;
+    }
+
+    @Override
+    public void setReady() throws RemoteException {
+        this.ready = true;
+    }
+
+    @Override
+    public int compareTo(Train o) {
+        return this.getBlock().compareTo(o.getBlock());
+    }
 
 }

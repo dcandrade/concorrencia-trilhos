@@ -15,10 +15,13 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import java.util.TreeMap;
 
-import model.Train;
 import util.ITrain;
 
 /**
@@ -27,76 +30,60 @@ import util.ITrain;
  */
 public class Controller {
 
-    private  int PORT = 3333;
+    private static final int PORT = 3332;
     private static final int NUM_TRAINS = 3;
-   
+
     private final ITrain myTrain;
     private final TreeMap<Integer, ITrain> trains;
 
     public Controller(ITrain myTrain) throws AlreadyBoundException, FileNotFoundException, IOException {
         this.trains = new TreeMap<>();
         this.myTrain = myTrain;
+        this.trains.put(myTrain.getBlock(), myTrain);
         loadTrains();
     }
-   
 
     private boolean addTrain(String hostname, int key) throws RemoteException {
         try {
-        	if (key == 1){
-	            Registry registry = LocateRegistry.getRegistry(3333);
-	            ITrain train = (ITrain) registry.lookup(hostname);
-	            this.trains.put(train.getBlock(), train);
-	            return true;
-        	}
-        	else if (key == 2){
-    	            Registry registry = LocateRegistry.getRegistry(3334);
-    	            ITrain train = (ITrain) registry.lookup(hostname);
-    	            this.trains.put(train.getBlock(), train);
-    	            return true;
-            	}
-        	else if (key == 3){
-	            Registry registry = LocateRegistry.getRegistry(3335);
-	            ITrain train = (ITrain) registry.lookup(hostname);
-	            this.trains.put(train.getBlock(), train);
-	            return true;
-        	}
-        	return false;
+            Registry registry = LocateRegistry.getRegistry(Controller.PORT + key);
+            ITrain train = (ITrain) registry.lookup(hostname);
+            this.trains.put(train.getBlock(), train);
+            return true;
         } catch (NotBoundException | AccessException ex) {
-            ex.getMessage();
+            System.err.println("Error while adding trains");
+            System.err.println(ex.getMessage());
             return false;
         }
     }
-    
-    private void loadTrains() throws FileNotFoundException, IOException{
+
+    private void loadTrains() throws FileNotFoundException, IOException {
         String hostname;
-        
+
         for (int i = 1; i <= Controller.NUM_TRAINS; i++) {
-            if(i != this.myTrain.getBlock()){
-                hostname = "Train"+i;
+            if (i != this.myTrain.getBlock()) {
+                hostname = "Train" + i;
                 boolean addTrain = this.addTrain(hostname, i);
-                
-                if(!addTrain){
-                    throw new NoSuchObjectException("Train #"+i+" not found");
+
+                if (!addTrain) {
+                    throw new NoSuchObjectException("Train #" + i + " not found");
                 }
             }
         }
-        
+
     }
-    
-    public void setSpeed(int block, int speed) throws RemoteException{
+
+    public void setSpeed(int block, int speed) throws RemoteException {
         this.trains.get(block).setSpeed(speed);
     }
+    
+    public Iterator<ITrain> getTrains(){
+        List<ITrain> list = new ArrayList<>();
+        
+        for(Integer x : this.trains.keySet()){
+            list.add(this.trains.get(x));
+        }
+        
+        return list.iterator();
+    }
 
-	public int getAmountRemoteObject() throws FileNotFoundException, IOException {
-				
-		return trains.size() ;
-		
-	}
-	
-	public TreeMap<Integer, ITrain> getTreeMap(){
-		return trains;
-	}
-
-	
-		
 }

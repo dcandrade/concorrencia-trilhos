@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import Controller.Facade;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -27,9 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import model.Point;
 import model.Quadro;
-import model.Train;
 import util.ITrain;
 
 /**
@@ -103,8 +102,6 @@ public class MainWindow {
         buttonInitial.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
             	startTrains();
-            	
-            	
             }
         });
         
@@ -123,8 +120,8 @@ public class MainWindow {
     	try {
 			this.facade = new Facade(myTrain);
 			TreeMap<Integer, ITrain> trainsAux = facade.getTrain();
-			ITrain trainAuxOne = trainsAux.get(trainsAux.firstKey());
-			ITrain trainAuxTwo = trainsAux.get(trainsAux.lastKey());
+			final ITrain trainAuxOne = trainsAux.get(trainsAux.firstKey());
+			final ITrain trainAuxTwo = trainsAux.get(trainsAux.lastKey());
 			quadro.insertPoint(trainAuxOne);
 			quadro.insertPoint(trainAuxTwo);
 			
