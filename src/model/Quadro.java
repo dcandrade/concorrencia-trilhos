@@ -32,6 +32,7 @@ public class Quadro extends JPanel implements Runnable {
     public void startPoints() throws RemoteException {
         for (ITrain ponto : this.points) {
             ponto.start();
+            System.out.println("O bloco correspondente foi "+ ponto.getBlock());
         }
     }
 

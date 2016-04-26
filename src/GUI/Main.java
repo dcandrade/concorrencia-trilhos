@@ -16,14 +16,14 @@ import util.ITrain;
  * @author solenir
  */
 public class Main {
-	private Train myTrain;
+	private ITrain myTrain;
 	private Thread threadServer;
 	private Thread threadClient;
     private MainWindow window;
-    private static final int PORT = 3333;
+    private static final int PORT = 3335;
 	
     public Main () throws RemoteException{
-    	this.myTrain = new Train(Point.UPPER_BLOCK);
+    	this.myTrain = new Train(Point.DOWN_LEFT_BLOCK);
     	this.threadServer = new Thread(new Server());
     	this.threadServer.start();
     	

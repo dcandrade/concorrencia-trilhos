@@ -41,11 +41,11 @@ public class MainWindow {
    private Container container;
    private Quadro quadro;
    private Facade facade; 
-   private Train myTrain;
+   private ITrain myTrain;
   
    
    
-    public MainWindow(String title, Train myTrain) throws RemoteException, NotBoundException, MalformedURLException, AlreadyBoundException{
+    public MainWindow(String title, ITrain myTrain) throws RemoteException, NotBoundException, MalformedURLException, AlreadyBoundException{
      
         this.myTrain = myTrain;
         this.container = new JPanel(new CardLayout());
@@ -69,8 +69,7 @@ public class MainWindow {
         Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
         this.frame.setLocation((tela.width - width) / 2, (tela.height - height) / 2);
     }
-    
-    ITrain trainThree ;
+   
 
     private void initialPanelMount() throws RemoteException, NotBoundException {
        ((CardLayout)container.getLayout()).show(container, "mainPrincipal"); 
@@ -109,7 +108,6 @@ public class MainWindow {
             }
         });
         
-     
         
      
         quadro.add(slideMyTrain);

@@ -7,7 +7,7 @@ package Controller;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.MalformedURLException;
+
 import java.rmi.AccessException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NoSuchObjectException;
@@ -30,10 +30,10 @@ public class Controller {
     private  int PORT = 3333;
     private static final int NUM_TRAINS = 3;
    
-    private final Train myTrain;
+    private final ITrain myTrain;
     private final TreeMap<Integer, ITrain> trains;
 
-    public Controller(Train myTrain) throws AlreadyBoundException, FileNotFoundException, IOException {
+    public Controller(ITrain myTrain) throws AlreadyBoundException, FileNotFoundException, IOException {
         this.trains = new TreeMap<>();
         this.myTrain = myTrain;
         loadTrains();
@@ -62,6 +62,7 @@ public class Controller {
         	}
         	return false;
         } catch (NotBoundException | AccessException ex) {
+            ex.getMessage();
             return false;
         }
     }
@@ -69,7 +70,7 @@ public class Controller {
     private void loadTrains() throws FileNotFoundException, IOException{
         String hostname;
         
-        for (int i = 1; i < Controller.NUM_TRAINS; i++) {
+        for (int i = 1; i <= Controller.NUM_TRAINS; i++) {
             if(i != this.myTrain.getBlock()){
                 hostname = "Train"+i;
                 boolean addTrain = this.addTrain(hostname, i);
@@ -79,6 +80,7 @@ public class Controller {
                 }
             }
         }
+        
     }
     
     public void setSpeed(int block, int speed) throws RemoteException{

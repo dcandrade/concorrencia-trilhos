@@ -23,7 +23,7 @@ import java.util.TreeMap;
 public class Facade {
     private Controller controller;
     
-    public Facade (Train trainBlock) throws AlreadyBoundException, FileNotFoundException, IOException{
+    public Facade (ITrain trainBlock) throws AlreadyBoundException, FileNotFoundException, IOException{
     	this.controller = new Controller(trainBlock);
         
     }

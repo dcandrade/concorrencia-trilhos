@@ -82,8 +82,9 @@ public class Train implements ITrain, Comparable {
 		
 		return this.ready;
 	}
-    
-	public void setReady(){
+	
+	@Override
+	public void setReady()throws RemoteException {
 		this.ready = true;
 	}
     
