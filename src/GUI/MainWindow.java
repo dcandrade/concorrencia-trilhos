@@ -95,10 +95,6 @@ public class MainWindow {
 
     }
 
-    private void startTrains() {
-        //Lógica de add movida para o setupPanel
-        
-    }
     
     public static void main(String[] args) throws AlreadyBoundException, IOException, RemoteException, NotBoundException {
         MainWindow mainWindow = new MainWindow("nome", Point.UPPER_BLOCK);
