@@ -31,7 +31,7 @@ public class Rail extends JPanel implements Runnable {
         this.cor = color;
     }
 
-    public void startPoints() throws RemoteException {
+    private void startPoints() throws RemoteException {
         for (ITrain ponto : this.points) {
             ponto.start();
             //System.out.println("O bloco correspondente foi "+ ponto.getBlock());
@@ -66,7 +66,6 @@ public class Rail extends JPanel implements Runnable {
     @Override
     public void run() {
         try {
-            this.startPoints();
             this.repaint();
             
             while (true) {
@@ -74,7 +73,7 @@ public class Rail extends JPanel implements Runnable {
                 this.repaint();
 
             }
-        } catch (InterruptedException | RemoteException ex) {
+        } catch (InterruptedException ex) {
             Logger.getLogger(Rail.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

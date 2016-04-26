@@ -3,12 +3,10 @@ package GUI;
 import Controller.Controller;
 import model.Rail;
 import java.awt.Color;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.io.IOException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
@@ -73,13 +71,6 @@ public class Client {
 
     public JPanel getSliderFrame() {
         return sliderFrame;
-    }
-    
-
-    public static void main(String[] args) throws AlreadyBoundException, IOException {
-        Client client = new Client();
-
-        client.start();
     }
 
 }

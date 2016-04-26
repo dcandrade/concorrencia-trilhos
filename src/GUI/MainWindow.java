@@ -7,10 +7,8 @@ package GUI;
 
 import Controller.Facade;
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -21,6 +19,8 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 import javax.swing.JButton;
@@ -80,12 +80,16 @@ public class MainWindow {
         buttonInitial.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                startTrains();
+                try {
+                    facade.startMyTrain();
+                } catch (RemoteException ex) {
+                    System.err.println(ex.getMessage());
+                }
             }
         });
 
         this.container.add(this.client.getSliderFrame(), BorderLayout.EAST);
-        //this.client.getFrame().add(buttonInitial);
+        this.container.add(buttonInitial, BorderLayout.WEST);
 
         this.client.start();
 

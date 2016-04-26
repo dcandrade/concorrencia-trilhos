@@ -30,8 +30,8 @@ import util.ITrain;
  */
 public class Controller {
 
-    private static final int PORT = 3332;
-    public static final int NUM_TRAINS = 1;
+    private static final int PORT = 1234;
+    public static final int NUM_TRAINS = 2;
 
     private final ITrain myTrain;
     private final TreeMap<Integer, ITrain> trains;
@@ -45,7 +45,8 @@ public class Controller {
 
     private boolean addTrain(String hostname, int key) throws RemoteException {
         try {
-            Registry registry = LocateRegistry.getRegistry(Controller.PORT + key);
+            Registry registry = LocateRegistry.getRegistry(Controller.PORT);
+            //Registry registry = LocateRegistry.getRegistry("localhost", Controller.PORT+key);
             ITrain train = (ITrain) registry.lookup(hostname);
             this.trains.put(train.getBlock(), train);
             return true;
@@ -70,6 +71,10 @@ public class Controller {
             }
         }
 
+    }
+    
+    public void startMyTrain() throws RemoteException{
+        this.myTrain.start();
     }
 
     public void setSpeed(int block, int speed) throws RemoteException {

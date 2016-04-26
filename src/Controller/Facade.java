@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.util.Iterator;
-import java.util.TreeMap;
 
 /**
  *
@@ -36,4 +35,7 @@ public class Facade {
         return this.controller.getTrains();
     }
 
+    public void startMyTrain() throws RemoteException{
+         this.controller.startMyTrain();
+    }
 }
