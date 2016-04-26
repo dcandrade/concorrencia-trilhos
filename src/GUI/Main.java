@@ -20,10 +20,10 @@ public class Main {
 	private Thread threadServer;
 	private Thread threadClient;
     private MainWindow window;
-    private static final int PORT = 3334;
+    private static final int PORT = 3333;
 	
     public Main () throws RemoteException{
-    	this.myTrain = new Train(Point.DOWN_RIGHT_BLOCK);
+    	this.myTrain = new Train(Point.UPPER_BLOCK);
     	this.threadServer = new Thread(new Server());
     	this.threadServer.start();
     	

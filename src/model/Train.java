@@ -25,7 +25,7 @@ import javax.swing.JSlider;
 public class Train implements ITrain, Comparable {
 
     private final Point train;
-
+    private boolean ready;
     public Train(int trainBlock) throws RemoteException {
         super();
         this.train = new Point(trainBlock);
@@ -76,7 +76,16 @@ public class Train implements ITrain, Comparable {
 		return train.getBlock() == ((Train)o).getBlock();
 		
 	}
+
+	@Override
+	public boolean noIsReady() throws RemoteException {
+		
+		return this.ready;
+	}
     
+	public void setReady(){
+		this.ready = true;
+	}
     
 
 }

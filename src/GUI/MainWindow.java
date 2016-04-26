@@ -104,12 +104,8 @@ public class MainWindow {
         buttonInitial.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
             	startTrains();
-            	try {
-					quadro.startPoints();
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+            	
+            	
             }
         });
         
@@ -182,6 +178,14 @@ public class MainWindow {
 	        quadro.add(slideAux);
 	        quadro.add(slideAux2);
 	    
+	        myTrain.setReady();
+	        try {
+	        	while(trainAuxOne.noIsReady() && trainAuxTwo.noIsReady() )
+	        		quadro.startPoints();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			
 			
