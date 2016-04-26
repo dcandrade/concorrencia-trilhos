@@ -1,23 +1,21 @@
 package GUI;
 
-import model.Quadro;
-import model.Point;
+import model.Rail;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.rmi.NotBoundException;
+import java.io.IOException;
+import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import javax.swing.JFrame;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import model.Train;
 import util.ITrain;
 
 /**
@@ -26,67 +24,64 @@ import util.ITrain;
  */
 public class Client extends JFrame {
 
-    private final Quadro quadro;
+    private final Rail railFrame;
+     
 
-    public Client() throws RemoteException, NotBoundException {
+    public Client() throws AlreadyBoundException, IOException {
+        super();
+        this.railFrame = new Rail(Color.blue);
+        
+    }
+
+    public Rail getRail() {
+        return railFrame;
+    }
+    
+    public void repaintRail(){
+        this.railFrame.repaint();
+    }
+    
+    private void createInitialFrame() {
         Container panel = getContentPane();
         panel.setLayout(new BorderLayout());
-        setSizeJFrame(1000, 700);
-        panel.setBounds(400, 400, 400, 400);
-        this.quadro = new Quadro(Color.blue);
-        panel.add(quadro);
+        //setSizeJFrame(1000, 700);
+        //panel.setBounds(400, 400, 400, 400);
+        panel.add(this.railFrame);
         setContentPane(panel);
-        panel.setVisible(true);
+    }
+  
 
-        this.quadro.repaint();
-        Train trainOne = new Train(Point.UPPER_BLOCK);
-        trainOne.start();
-        Train trainTwo = new Train(Point.DOWN_LEFT_BLOCK);
-        trainTwo.start();
+    public JSlider addTrain(final ITrain train) {
+        this.railFrame.insertPoint(train);
 
-        Registry registry = LocateRegistry.getRegistry(3333);
-        final ITrain trainThree = (ITrain) registry.lookup("Train" + Point.DOWN_RIGHT_BLOCK);
-
-        this.quadro.insertPoint(trainOne);
-        this.quadro.insertPoint(trainTwo);
-        this.quadro.insertPoint(trainThree);
-
-        JSlider slide = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
-        slide.setMajorTickSpacing(1);
-        slide.setMinorTickSpacing(1);
-        slide.setPaintTicks(true);
-        slide.setPaintLabels(true);
-        slide.addChangeListener(new ChangeListener() {
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
+        slider.setMajorTickSpacing(1);
+        slider.setMinorTickSpacing(1);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
+        slider.addChangeListener(new ChangeListener() {
 
             @Override
             public void stateChanged(ChangeEvent e) {
                 JSlider j = (JSlider) e.getSource();
                 if (!j.getValueIsAdjusting()) {
                     try {
-                        trainThree.setSpeed((int) j.getValue());
+                        train.setSpeed((int) j.getValue());
                     } catch (RemoteException ex) {
-                        ex.printStackTrace();
+                        System.err.println(ex.getLocalizedMessage());
                     }
                 }
             }
         });
 
-        panel.add(slide, BorderLayout.SOUTH);
-
-        setVisible(true);
-        Thread t = new Thread(this.quadro);
-        t.start();
+        return slider;
     }
 
-    public static void main(String[] args) throws RemoteException, NotBoundException {
-        Client desenho = new Client();
-        desenho.addWindowListener(new WindowAdapter() {
-
-            @Override
-            public void windowClosing(WindowEvent evento) {
-                System.exit(0);
-            }
-        });
+    public void display() {
+        this.setVisible(true);
+        getContentPane().setVisible(true);
+        Thread thread = new Thread(this.railFrame);
+        thread.start();
     }
 
     /**
@@ -102,13 +97,18 @@ public class Client extends JFrame {
         setLocation((tela.width - x) / 2, (tela.height - y) / 2);
     }
 
-    /**
-     * Método que modifica a visibilidade da janela da aplicação.
-     *
-     * @param b True, se visível. False, se invisível.
-     */
-    public void setVisibleJFrame(boolean b) {
-        setVisible(b);
+    public static void main(String[] args) throws AlreadyBoundException, IOException {
+        Client client = new Client();
+        client.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent evento) {
+                System.exit(0);
+            }
+        });
+        
+        client.createInitialFrame();
+        client.display();
     }
 
 }

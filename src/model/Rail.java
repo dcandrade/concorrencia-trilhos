@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import static java.lang.Thread.sleep;
@@ -15,24 +16,25 @@ import util.ITrain;
  *
  * @author solenir
  */
-public class Quadro extends JPanel implements Runnable {
+public class Rail extends JPanel implements Runnable {
 
     private final Color cor;
     private final List<ITrain> points;
     public static int REFRESH_RATE = 15;
 
-    public Quadro(Color blue) {
-        setLayout(null);
+    public Rail(Color color) {
+        super(); //P/ visualizar o slider
+        //setLayout(null);
         setSize(994, 672);
         this.points = new ArrayList<>();
         repaint();
-        this.cor = blue;
+        this.cor = color;
     }
 
     public void startPoints() throws RemoteException {
         for (ITrain ponto : this.points) {
             ponto.start();
-            System.out.println("O bloco correspondente foi "+ ponto.getBlock());
+            //System.out.println("O bloco correspondente foi "+ ponto.getBlock());
         }
     }
 
@@ -49,7 +51,7 @@ public class Quadro extends JPanel implements Runnable {
             try {
                 g.fillOval(ponto.getX(), ponto.getY(), 10, 10);
             } catch (RemoteException ex) {
-                Logger.getLogger(Quadro.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Rail.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
@@ -64,16 +66,16 @@ public class Quadro extends JPanel implements Runnable {
     @Override
     public void run() {
         try {
-            //this.startPoints();
+            this.startPoints();
             this.repaint();
             
             while (true) {
-                sleep(Quadro.REFRESH_RATE - 5);
+                sleep(Rail.REFRESH_RATE - 5);
                 this.repaint();
 
             }
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Quadro.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException | RemoteException ex) {
+            Logger.getLogger(Rail.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

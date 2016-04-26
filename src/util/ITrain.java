@@ -34,6 +34,8 @@ public interface ITrain extends Remote {
     public int getY() throws RemoteException;
     
     public void start() throws RemoteException;
+    
     public boolean noIsReady() throws RemoteException;
+    
     public void setReady() throws RemoteException;
  }

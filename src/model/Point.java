@@ -130,7 +130,7 @@ public class Point extends Thread {
             }
 
             try {
-                sleep(Quadro.REFRESH_RATE);
+                sleep(Rail.REFRESH_RATE);
             } catch (Exception e) {
                 System.out.println("Exception: " + e.getMessage());
             }

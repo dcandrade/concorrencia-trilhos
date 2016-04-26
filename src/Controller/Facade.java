@@ -24,7 +24,7 @@ public class Facade {
 
     private final Controller controller;
 
-    public Facade(ITrain trainBlock) throws AlreadyBoundException, FileNotFoundException, IOException {
+    public Facade(int trainBlock) throws AlreadyBoundException, FileNotFoundException, IOException {
         this.controller = new Controller(trainBlock);
     }
 

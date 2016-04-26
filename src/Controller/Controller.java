@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import java.util.TreeMap;
+import model.Train;
 
 import util.ITrain;
 
@@ -31,14 +32,14 @@ import util.ITrain;
 public class Controller {
 
     private static final int PORT = 3332;
-    private static final int NUM_TRAINS = 3;
+    private static final int NUM_TRAINS = 1;
 
     private final ITrain myTrain;
     private final TreeMap<Integer, ITrain> trains;
 
-    public Controller(ITrain myTrain) throws AlreadyBoundException, FileNotFoundException, IOException {
+    public Controller(int trainBlock) throws AlreadyBoundException, FileNotFoundException, IOException {
         this.trains = new TreeMap<>();
-        this.myTrain = myTrain;
+        this.myTrain = new Train(trainBlock);
         this.trains.put(myTrain.getBlock(), myTrain);
         loadTrains();
     }
