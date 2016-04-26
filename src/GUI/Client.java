@@ -1,18 +1,15 @@
 package GUI;
 
+import Controller.Controller;
 import model.Rail;
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.io.IOException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -22,15 +19,16 @@ import util.ITrain;
  *
  * @author solenir
  */
-public class Client extends JFrame {
+public class Client {
 
     private final Rail railFrame;
-     
+    private final JPanel sliderFrame;
 
     public Client() throws AlreadyBoundException, IOException {
         super();
         this.railFrame = new Rail(Color.blue);
-        
+        this.sliderFrame = new JPanel(new GridLayout(Controller.NUM_TRAINS, 1));
+        this.sliderFrame.setVisible(true);
     }
 
     public Rail getRail() {
@@ -40,18 +38,9 @@ public class Client extends JFrame {
     public void repaintRail(){
         this.railFrame.repaint();
     }
-    
-    private void createInitialFrame() {
-        Container panel = getContentPane();
-        panel.setLayout(new BorderLayout());
-        //setSizeJFrame(1000, 700);
-        //panel.setBounds(400, 400, 400, 400);
-        panel.add(this.railFrame);
-        setContentPane(panel);
-    }
   
 
-    public JSlider addTrain(final ITrain train) {
+    public void addTrain(final ITrain train) {
         this.railFrame.insertPoint(train);
 
         JSlider slider = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
@@ -74,41 +63,23 @@ public class Client extends JFrame {
             }
         });
 
-        return slider;
+        this.sliderFrame.add(slider);
     }
 
-    public void display() {
-        this.setVisible(true);
-        getContentPane().setVisible(true);
+    public void start() {
         Thread thread = new Thread(this.railFrame);
         thread.start();
     }
 
-    /**
-     * Método que modifica o tamanho da janela da aplicação e a centraliza na
-     * tela do PC.
-     *
-     * @param x Int com a largura da janela.
-     * @param y Int com a altura da janela.
-     */
-    public void setSizeJFrame(int x, int y) {
-        setSize(x, y);
-        Dimension tela = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation((tela.width - x) / 2, (tela.height - y) / 2);
+    public JPanel getSliderFrame() {
+        return sliderFrame;
     }
+    
 
     public static void main(String[] args) throws AlreadyBoundException, IOException {
         Client client = new Client();
-        client.addWindowListener(new WindowAdapter() {
 
-            @Override
-            public void windowClosing(WindowEvent evento) {
-                System.exit(0);
-            }
-        });
-        
-        client.createInitialFrame();
-        client.display();
+        client.start();
     }
 
 }

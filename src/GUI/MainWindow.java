@@ -10,6 +10,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -25,7 +26,6 @@ import java.util.Iterator;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
 import model.Point;
 import util.ITrain;
 
@@ -44,9 +44,9 @@ public class MainWindow {
         this.frame = new JFrame(title);
         this.facade = new Facade(trainBlock);
         this.client = new Client();
-        this.container = new JPanel(new CardLayout());
+        this.container = new JPanel(new BorderLayout());
 
-        this.container.add(client.getRail(), "mainPrincipal");
+        this.container.add(client.getRail(), BorderLayout.CENTER);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(this.container);
@@ -64,18 +64,13 @@ public class MainWindow {
     }
 
     private void setupPanel() throws RemoteException, NotBoundException {
-        ((CardLayout) container.getLayout()).show(container, "mainPrincipal");
+       // ((CardLayout) container.getLayout()).show(container, "mainPrincipal");
         this.client.repaintRail();
 
-        //Add trains and sliders
         Iterator<ITrain> trains = this.facade.getTrains();
 
         while (trains.hasNext()) {
-            JSlider slider = this.client.addTrain(trains.next()); // addTrain já poe ele na tela
-
-            //Adicionei desse jeito pq foi o mais rápido
-            //Se tiver quiser posicionar melhor fica a vontade
-             this.client.getRail().add(slider, BorderLayout.SOUTH);
+           this.client.addTrain(trains.next());
         }
 
         JButton buttonInitial = new JButton("Iniciar");
@@ -89,9 +84,10 @@ public class MainWindow {
             }
         });
 
+        this.container.add(this.client.getSliderFrame(), BorderLayout.EAST);
         //this.client.getFrame().add(buttonInitial);
 
-        this.client.display();
+        this.client.start();
 
     }
 

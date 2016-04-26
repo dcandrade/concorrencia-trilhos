@@ -18,7 +18,6 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import java.util.TreeMap;
 import model.Train;
@@ -32,7 +31,7 @@ import util.ITrain;
 public class Controller {
 
     private static final int PORT = 3332;
-    private static final int NUM_TRAINS = 1;
+    public static final int NUM_TRAINS = 1;
 
     private final ITrain myTrain;
     private final TreeMap<Integer, ITrain> trains;
@@ -86,5 +85,7 @@ public class Controller {
         
         return list.iterator();
     }
+    
+    
 
 }
