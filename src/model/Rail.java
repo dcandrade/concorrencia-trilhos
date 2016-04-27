@@ -25,7 +25,7 @@ public class Rail extends JPanel implements Runnable {
 
     public Rail(Color color, int trainBlock) {
         super();
-        //setLayout(null);
+        setLayout(null);
         setSize(994, 672);
         this.points = new ArrayList<>();
         repaint();
