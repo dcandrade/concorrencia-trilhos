@@ -20,13 +20,13 @@ import util.ITrain;
 public class Client {
 
     private final Rail railFrame;
-    private final JPanel sliderFrame;
+    private final JPanel mainPanel;
 
     public Client() throws AlreadyBoundException, IOException {
         super();
         this.railFrame = new Rail(Color.blue);
-        this.sliderFrame = new JPanel(new GridLayout(Controller.NUM_TRAINS, 1));
-        this.sliderFrame.setVisible(true);
+        this.mainPanel = new JPanel(null);
+        this.mainPanel.setVisible(true);
     }
 
     public Rail getRail() {
@@ -38,7 +38,7 @@ public class Client {
     }
   
 
-    public void addTrain(final ITrain train) {
+    public void addTrain(final ITrain train) throws RemoteException {
         this.railFrame.insertPoint(train);
 
         JSlider slider = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
@@ -61,7 +61,8 @@ public class Client {
             }
         });
 
-        this.sliderFrame.add(slider);
+        slider.setBounds((320*(train.getBlock()-1))+2, 530, 300, 80);       
+        this.mainPanel.add(slider);
     }
 
     public void start() {
@@ -70,7 +71,7 @@ public class Client {
     }
 
     public JPanel getSliderFrame() {
-        return sliderFrame;
+        return mainPanel;
     }
 
 }

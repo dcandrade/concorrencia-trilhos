@@ -7,6 +7,7 @@ package GUI;
 
 import Controller.Facade;
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 
@@ -44,9 +45,9 @@ public class MainWindow {
         this.frame = new JFrame(title);
         this.facade = new Facade(trainBlock);
         this.client = new Client();
-        this.container = new JPanel(new BorderLayout());
+        this.container = new JPanel(new CardLayout());
 
-        this.container.add(client.getRail(), BorderLayout.CENTER);
+        this.container.add(client.getRail(), "initialPanel");
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(this.container);
@@ -64,7 +65,7 @@ public class MainWindow {
     }
 
     private void setupPanel() throws RemoteException, NotBoundException {
-       // ((CardLayout) container.getLayout()).show(container, "mainPrincipal");
+       ((CardLayout) container.getLayout()).show(container, "initialPanel");
         this.client.repaintRail();
 
         Iterator<ITrain> trains = this.facade.getTrains();
@@ -76,7 +77,7 @@ public class MainWindow {
         JButton buttonInitial = new JButton("Iniciar");
         buttonInitial.setBounds(850, 80, 100, 50);
         buttonInitial.setBorder(null);
-
+ 
         buttonInitial.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -87,8 +88,8 @@ public class MainWindow {
                 }
             }
         });
-
-        this.container.add(this.client.getSliderFrame(), BorderLayout.EAST);
+        this.client.getSliderFrame().add(buttonInitial);
+        this.container.add(this.client.getSliderFrame());
         this.container.add(buttonInitial, BorderLayout.WEST);
 
         this.client.start();

@@ -24,7 +24,7 @@ public class Rail extends JPanel implements Runnable {
 
     public Rail(Color color) {
         super(); //P/ visualizar o slider
-        //setLayout(null);
+        setLayout(null);
         setSize(994, 672);
         this.points = new ArrayList<>();
         repaint();
