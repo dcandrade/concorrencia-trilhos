@@ -46,8 +46,6 @@ public class MainWindow {
 
         this.container.add(client.getSliderFrame(), "initialPanel");
 
-        this.container.add(client.getRail());
-        this.container.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(this.container);
         frame.setResizable(false);
@@ -63,7 +61,7 @@ public class MainWindow {
     }
 
     private void setupPanel() throws RemoteException, NotBoundException {
-     
+       ((CardLayout) container.getLayout()).show(container, "initialPanel");
         this.client.repaintRail();
 
         Iterator<ITrain> trains = this.facade.getTrains();
@@ -88,13 +86,12 @@ public class MainWindow {
         });
 
         this.client.getSliderFrame().add(buttonInitial);
-        this.container.add(this.client.getSliderFrame());
-        
+           
 
-       
-         this.frame.setVisible(true);
          this.client.start();
-        ((CardLayout) container.getLayout()).show(container, "initialPanel");
+         this.frame.setVisible(true);
+         
+        
     }
 
     

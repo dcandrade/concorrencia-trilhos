@@ -20,12 +20,12 @@ import util.ITrain;
 public class Client {
 
     private final Rail railFrame;
-    private final JPanel mainPanel;
+    
 
     public Client(int trainBlock) throws AlreadyBoundException, IOException {
        super();
        this.railFrame = new Rail(Color.blue, trainBlock);
-       this.mainPanel = new JPanel(null);
+       
        
     }
 
@@ -61,7 +61,7 @@ public class Client {
             }
         });
         slider.setBounds((320*(train.getBlock()-1))+2, 530, 300, 80);   
-        this.mainPanel.add(slider);
+        this.railFrame.add(slider);
     }
 
     public void start() {
@@ -70,7 +70,7 @@ public class Client {
     }
 
     public JPanel getSliderFrame() {
-        return mainPanel;
+        return railFrame;
     }
 
 }
