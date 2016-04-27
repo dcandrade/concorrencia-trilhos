@@ -47,12 +47,11 @@ public class MainWindow {
         this.container = new JPanel(new BorderLayout());
 
         this.container.add(client.getRail(), BorderLayout.CENTER);
-
+        this.container.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(this.container);
         frame.setResizable(false);
         setWindowSize(1000, 700);
-        frame.setVisible(true);
         setupPanel();
 
     }
@@ -92,7 +91,8 @@ public class MainWindow {
         this.container.add(buttonInitial, BorderLayout.WEST);
 
         this.client.start();
-
+        this.container.setVisible(true);
+        this.frame.setVisible(true);
     }
 
     
