@@ -58,6 +58,7 @@ public class TrainWatcher extends Thread {
             while (true) {
                 if (trainOnCriticalRegion != null) {
                     while (trainOnCriticalRegion.isOnCriticalRegion()); //espera trem sair
+                    trainOnCriticalRegion =null;
                 }
                 for (ITrain t : this.trains) {
                     if (t.hasIntentionCriticalRegion()) {
@@ -65,11 +66,12 @@ public class TrainWatcher extends Thread {
                     }
                 }
 
-                if (!candidates.isEmpty()) {
+                if (!candidates.isEmpty() && trainOnCriticalRegion == null) {
                     trainOnCriticalRegion = candidates.pollFirst();
                     trainOnCriticalRegion.allowCriticalRegion();
-                }else{
-                    trainOnCriticalRegion = null;
+                    synchronized(this){
+                    wait(50);
+                    }
                 }
             }
         } catch (Exception ex) {
