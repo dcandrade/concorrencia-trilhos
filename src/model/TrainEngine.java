@@ -14,19 +14,24 @@ public class TrainEngine extends Thread {
     private int x, x0, y, y0;
     private int stepSize;
     private final int block;
+    private int distance;
 
     public TrainEngine(int block) {
+             
         if (block == TrainEngine.UPPER_BLOCK) {
             this.x0 = 395;
             this.y0 = 45;
+            this.distance = 0;
             this.numberComparison = 70;
         } else if (block == TrainEngine.DOWN_LEFT_BLOCK) {
             this.x0 = 295;
-            this.y0 = 175;
+            this.y0 = 375;
+            this.distance = 600;
             this.numberComparison = 0;
         } else if (block == TrainEngine.DOWN_RIGHT_BLOCK) {
-            this.x0 = 495;
+            this.x0 = 695;
             this.y0 = 175;
+            this.distance = 200;
             this.numberComparison = 0;
         }else{
              throw new IllegalArgumentException("Invalid block number");
@@ -34,7 +39,7 @@ public class TrainEngine extends Thread {
         
         this.block = block;
         this.x = x0;
-        this.y = y0;
+        this.y = y0;      
         this.stepSize = 1;
     }
 
@@ -67,9 +72,10 @@ public class TrainEngine extends Thread {
         this.y = y;
     }
 
+    
     @Override
     public void run() {
-        int distance = 0;
+      
         while (true) {
 
             if (distance < 200) {
@@ -88,16 +94,25 @@ public class TrainEngine extends Thread {
 
             if (distance >= 800 - numberComparison * 2) {
                 distance = 0;
-
-                //Reset the initial position
-                this.x = this.x0;
-                this.y = this.y0;
+                if(getBlock() == 1){
+	        this.x = this.x0;
+	        this.y = this.y0;
+                }
+                else if(getBlock() == 2){
+	            this.x = 495;
+	            this.y = 175;
+                }
+                else if(getBlock() == 3){
+	             this.x = 295;
+	             this.y = 175;
+	        }
+                     
             }
-
+           
             try {
                 sleep(Rail.REFRESH_RATE);
             } catch (Exception e) {
-                System.out.println("Erron on Point: " + e.getMessage());
+                System.out.println("Exception: " + e.getMessage());
             }
         }
     }

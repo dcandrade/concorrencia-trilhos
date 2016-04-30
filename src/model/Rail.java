@@ -1,6 +1,6 @@
 package model;
 
-import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import static java.lang.Thread.sleep;
@@ -52,7 +52,7 @@ public class Rail extends JPanel implements Runnable {
         for (ITrain ponto : this.points) {
             try {
                 if (ponto.getBlock() == this.trainBlock) {
-                    g.setColor(Color.RED);
+                    g.setColor(Color.BLACK);
                     g.fillOval(ponto.getX(), ponto.getY(), 10, 10);
                     g.setColor(this.color);
                 } else {
@@ -66,6 +66,9 @@ public class Rail extends JPanel implements Runnable {
         g.drawRect(400, 50, 200, 130);
         g.drawRect(300, 180, 200, 200);
         g.drawRect(500, 180, 200, 200);
+        g.setColor(Color.RED);
+        g.drawLine( 500, 180, 500, 380 );
+        g.drawLine( 400, 180, 600, 180 );
     }
 
     @Override
