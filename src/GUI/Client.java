@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import model.TrainEngine;
 import util.ITrain;
 
 /**
@@ -41,7 +42,7 @@ public class Client {
     public void addTrain(final ITrain train) throws RemoteException {
         this.railFrame.insertPoint(train);
 
-        JSlider slider = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, 1, TrainEngine.MAX_SPEED, 1);
         slider.setMajorTickSpacing(1);
         slider.setMinorTickSpacing(1);
         slider.setPaintTicks(true);

@@ -16,11 +16,15 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import java.util.TreeMap;
 import model.Train;
+import model.TrainWatcher;
 
 import util.ITrain;
 
@@ -71,26 +75,32 @@ public class Controller {
             }
         }
 
+        List<ITrain> t = new ArrayList<>();
+        Iterator<Integer> iterator = this.trains.keySet().iterator();
+        while(iterator.hasNext()){
+            t.add(this.trains.get(iterator.next()));
+        }
+        
+        TrainWatcher tw = new TrainWatcher(t);
+        tw.start();
     }
-    
-    public void startMyTrain() throws RemoteException{
+
+    public void startMyTrain() throws RemoteException {
         this.myTrain.start();
     }
 
     public void setSpeed(int block, int speed) throws RemoteException {
         this.trains.get(block).setSpeed(speed);
     }
-    
-    public Iterator<ITrain> getTrains(){
+
+    public Iterator<ITrain> getTrains() {
         List<ITrain> list = new ArrayList<>();
-        
-        for(Integer x : this.trains.keySet()){
+
+        for (Integer x : this.trains.keySet()) {
             list.add(this.trains.get(x));
         }
-        
+
         return list.iterator();
     }
-    
-    
 
 }

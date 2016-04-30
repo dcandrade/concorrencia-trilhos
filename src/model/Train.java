@@ -60,6 +60,31 @@ public class Train extends UnicastRemoteObject implements ITrain, Comparable<Tra
     public int getY() {
         return this.train.getY();
     }
+    
+    @Override
+    public Double distanceToCriticalRegion() {
+        return this.train.distanceToCriticalRegion();
+    }
+    
+    @Override
+    public boolean isOnCriticalRegion() {
+        return this.train.isOnCriticalRegion();
+    }
+    
+    @Override
+    public boolean hasPermissionCriticalRegion() {
+        return this.train.hasPermissionCriticalRegion();
+    }
+    
+    @Override
+    public void allowCriticalRegion(){
+        this.train.allowCriticalRegion();
+    }
+    
+    @Override
+     public boolean hasIntentionCriticalRegion() {
+         return this.train.hasIntentionCriticalRegion();
+     }
 
     @Override
     public boolean equals(Object o) {

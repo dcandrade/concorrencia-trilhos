@@ -21,7 +21,7 @@ import java.rmi.RemoteException;
  *
  * @author Daniel Andrade e Solenir Figuerêdo
  */
-public interface ITrain extends Remote {
+public interface ITrain extends Remote{
     
     public void setSpeed(int newSpeed) throws RemoteException;
     
@@ -38,4 +38,14 @@ public interface ITrain extends Remote {
     public boolean noIsReady() throws RemoteException;
     
     public void setReady() throws RemoteException;
- }
+    
+     public Double distanceToCriticalRegion() throws RemoteException;
+    
+    public boolean isOnCriticalRegion() throws RemoteException;
+            
+    public boolean hasPermissionCriticalRegion() throws RemoteException;
+    
+     public boolean hasIntentionCriticalRegion() throws RemoteException;
+     
+     public void allowCriticalRegion() throws RemoteException;
+      }
