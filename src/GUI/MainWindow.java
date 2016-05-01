@@ -60,15 +60,20 @@ public class MainWindow {
         this.frame.setLocation((tela.width - width) / 2, (tela.height - height) / 2);
     }
 
-    private void setupPanel() throws RemoteException, NotBoundException {
-       ((CardLayout) container.getLayout()).show(container, "initialPanel");
-        this.client.repaintRail();
-
+    private void loadTrains() throws RemoteException, IOException {
+        this.facade.loadTrains();
         Iterator<ITrain> trains = this.facade.getTrains();
 
         while (trains.hasNext()) {
-           this.client.addTrain(trains.next());
+            this.client.addTrain(trains.next());
         }
+
+        this.client.repaintRail();
+    }
+
+    private void setupPanel() throws RemoteException, NotBoundException {
+        ((CardLayout) container.getLayout()).show(container, "initialPanel");
+        this.client.repaintRail();
 
         JButton buttonInitial = new JButton("Iniciar");
         buttonInitial.setBounds(850, 80, 100, 50);
@@ -79,24 +84,42 @@ public class MainWindow {
             public void actionPerformed(ActionEvent ae) {
                 try {
                     facade.startMyTrain();
+                    ((JButton) ae.getSource()).setEnabled(false);
                 } catch (RemoteException ex) {
                     System.err.println(ex.getMessage());
                 }
             }
         });
 
-        this.client.getSliderFrame().add(buttonInitial);
-           
+        JButton load = new JButton("Carregar Trens");
+        load.setBounds(850, 180, 120, 50);
+        load.setBorder(null);
 
-         this.client.start();
-         this.frame.setVisible(true);
-         
-        
+        load.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    loadTrains();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        this.client.getSliderFrame().add(load);
+        this.client.getSliderFrame().add(buttonInitial);
+
+        this.client.start();
+        this.frame.setVisible(true);
+
     }
 
-    
     public static void main(String[] args) throws AlreadyBoundException, IOException, RemoteException, NotBoundException {
-        MainWindow mainWindow = new MainWindow("nome", TrainEngine.UPPER_BLOCK);
+        MainWindow mainWindow;
+        mainWindow = new MainWindow("nome", TrainEngine.UPPER_BLOCK);
+        mainWindow = new MainWindow("nome", TrainEngine.DOWN_RIGHT_BLOCK);
+        mainWindow = new MainWindow("nome", TrainEngine.DOWN_LEFT_BLOCK);
     }
 
 }

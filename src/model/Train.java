@@ -111,4 +111,9 @@ public class Train extends UnicastRemoteObject implements ITrain, Comparable<Tra
         return this.getBlock().compareTo(o.getBlock());
     }
 
+    @Override
+    public void exitCriticalRegion() throws RemoteException {
+        this.train.exitCriticalRegion();
+    }
+
 }
