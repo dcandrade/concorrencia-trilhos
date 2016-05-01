@@ -2,6 +2,7 @@ package model;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.util.Random;
 
 /**
  *
@@ -12,10 +13,10 @@ public class TrainEngine extends Thread {
     public static final int DOWN_LEFT_BLOCK = 3;
     public static final int DOWN_RIGHT_BLOCK = 2;
     public static final int UPPER_BLOCK = 1;
-    public static final int WARNING_DISTANCE = 100;
-    public static final int SAFE_DISTANCE = WARNING_DISTANCE/10;
     public static final int MAX_SPEED = 5;
 
+    private final int warningDistance;
+    private final int safeDistance;
     private int numberComparison;
     private int distance;
     private int x, x0, y, y0;
@@ -27,6 +28,9 @@ public class TrainEngine extends Thread {
     private boolean permissionCriticalRegion;
 
     public TrainEngine(int block) {
+        this.warningDistance=50*block;
+        this.safeDistance=warningDistance/4;
+        
         this.intentCriticalRegion = false;
         this.permissionCriticalRegion = false;
         this.distance = 0;
@@ -49,8 +53,9 @@ public class TrainEngine extends Thread {
             this.lastCriticalRegionPoint = new Point(495, 375);
             
         } else if (block == TrainEngine.DOWN_RIGHT_BLOCK) {
-            this.x0 = 495;
+            this.x0 = 695;
             this.y0 = 175;
+            this.distance = 200;
             this.numberComparison = 0;
             this.permissionCriticalRegion = true;
             this.firstCriticalRegionPoint = new Point(495, 375);
@@ -137,7 +142,7 @@ public class TrainEngine extends Thread {
     public void run() {
         while (true) {
             if (distance < 200) {
-                if (this.distanceToCriticalRegion() > this.stepSize + TrainEngine.SAFE_DISTANCE) {
+                if (this.distanceToCriticalRegion() > this.stepSize + this.safeDistance) {
                     x += this.stepSize;
                     distance += this.stepSize;
                 }else if(this.hasPermissionCriticalRegion()){
@@ -145,7 +150,7 @@ public class TrainEngine extends Thread {
                     distance += this.stepSize;
                 }
             } else if (distance < 400 - numberComparison) {
-                if (this.distanceToCriticalRegion() > this.stepSize+ TrainEngine.SAFE_DISTANCE) {
+                if (this.distanceToCriticalRegion() > this.stepSize+ this.safeDistance) {
                     y += this.stepSize;
                     distance += this.stepSize;
                 }else if(this.hasPermissionCriticalRegion()){
@@ -153,7 +158,7 @@ public class TrainEngine extends Thread {
                     distance += this.stepSize;
                 }
             } else if (distance < 600 - numberComparison) {
-                if (this.distanceToCriticalRegion() > this.stepSize+ TrainEngine.SAFE_DISTANCE) {
+                if (this.distanceToCriticalRegion() > this.stepSize+ this.safeDistance) {
                     x -= this.stepSize;
                     distance += this.stepSize;
                 }else if(this.hasPermissionCriticalRegion()){
@@ -161,7 +166,7 @@ public class TrainEngine extends Thread {
                     distance += this.stepSize;
                 }
             } else if (distance < 800 - numberComparison) {
-                if (this.distanceToCriticalRegion() > this.stepSize + TrainEngine.SAFE_DISTANCE) {
+                if (this.distanceToCriticalRegion() > this.stepSize + this.safeDistance) {
                     y -= this.stepSize;
                     distance += this.stepSize;
                 }else if(this.hasPermissionCriticalRegion()){
@@ -171,7 +176,10 @@ public class TrainEngine extends Thread {
             }
 
             if (distance >= 800 - numberComparison * 2) {
-                distance = 0;
+                if(block == TrainEngine.DOWN_RIGHT_BLOCK){
+                    this.distance=200;
+                }else
+                    distance =0;
                 //Reset the initial position
                 this.x = this.x0;
                 this.y = this.y0;
@@ -180,10 +188,10 @@ public class TrainEngine extends Thread {
             //Rever algoritmo abaixo, precisa melhoorar
             if (!this.hasIntentionCriticalRegion() 
                     && this.distanceToCriticalRegion()>0 
-                    && this.distanceToCriticalRegion() < TrainEngine.WARNING_DISTANCE) {
+                    && this.distanceToCriticalRegion() < this.warningDistance) {
                 this.intentCriticalRegion();
             } else if(!this.isOnCriticalRegion()  
-                    && this.distanceToCriticalRegion()> TrainEngine.WARNING_DISTANCE){
+                    && this.distanceToCriticalRegion()> this.warningDistance){
                 this.exitCriticalRegion();
             }
 
