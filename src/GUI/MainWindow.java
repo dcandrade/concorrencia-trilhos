@@ -6,7 +6,7 @@
 package GUI;
 
 import Controller.Facade;
-import java.awt.BorderLayout;
+
 import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -20,14 +20,11 @@ import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import model.Point;
+import model.TrainEngine;
 import util.ITrain;
 
 /**
@@ -44,16 +41,15 @@ public class MainWindow {
     public MainWindow(String title, int trainBlock) throws AlreadyBoundException, IOException, RemoteException, NotBoundException {
         this.frame = new JFrame(title);
         this.facade = new Facade(trainBlock);
-        this.client = new Client();
+        this.client = new Client(trainBlock);
         this.container = new JPanel(new CardLayout());
 
-        this.container.add(client.getRail(), "initialPanel");
+        this.container.add(client.getSliderFrame(), "initialPanel");
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(this.container);
         frame.setResizable(false);
         setWindowSize(1000, 700);
-        frame.setVisible(true);
         setupPanel();
 
     }
@@ -64,41 +60,66 @@ public class MainWindow {
         this.frame.setLocation((tela.width - width) / 2, (tela.height - height) / 2);
     }
 
-    private void setupPanel() throws RemoteException, NotBoundException {
-       ((CardLayout) container.getLayout()).show(container, "initialPanel");
-        this.client.repaintRail();
-
+    private void loadTrains() throws RemoteException, IOException {
+        this.facade.loadTrains();
         Iterator<ITrain> trains = this.facade.getTrains();
 
         while (trains.hasNext()) {
-           this.client.addTrain(trains.next());
+            this.client.addTrain(trains.next());
         }
+
+        this.client.repaintRail();
+    }
+
+    private void setupPanel() throws RemoteException, NotBoundException {
+        ((CardLayout) container.getLayout()).show(container, "initialPanel");
+        this.client.repaintRail();
 
         JButton buttonInitial = new JButton("Iniciar");
         buttonInitial.setBounds(850, 80, 100, 50);
         buttonInitial.setBorder(null);
- 
+
         buttonInitial.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 try {
                     facade.startMyTrain();
+                    ((JButton) ae.getSource()).setEnabled(false);
                 } catch (RemoteException ex) {
                     System.err.println(ex.getMessage());
                 }
             }
         });
+
+        JButton load = new JButton("Carregar Trens");
+        load.setBounds(850, 180, 120, 50);
+        load.setBorder(null);
+
+        load.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    loadTrains();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        this.client.getSliderFrame().add(load);
         this.client.getSliderFrame().add(buttonInitial);
-        this.container.add(this.client.getSliderFrame());
-        this.container.add(buttonInitial, BorderLayout.WEST);
 
         this.client.start();
+        this.frame.setVisible(true);
 
     }
 
-    
     public static void main(String[] args) throws AlreadyBoundException, IOException, RemoteException, NotBoundException {
-        MainWindow mainWindow = new MainWindow("nome", Point.UPPER_BLOCK);
+        MainWindow mainWindow;
+        mainWindow = new MainWindow("nome", TrainEngine.UPPER_BLOCK);
+        mainWindow = new MainWindow("nome", TrainEngine.DOWN_RIGHT_BLOCK);
+        mainWindow = new MainWindow("nome", TrainEngine.DOWN_LEFT_BLOCK);
     }
 
 }

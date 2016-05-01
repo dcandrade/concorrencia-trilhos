@@ -3,7 +3,7 @@ package GUI;
 import Controller.Controller;
 import model.Rail;
 import java.awt.Color;
-import java.awt.GridLayout;
+
 import java.io.IOException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import model.TrainEngine;
 import util.ITrain;
 
 /**
@@ -20,13 +21,13 @@ import util.ITrain;
 public class Client {
 
     private final Rail railFrame;
-    private final JPanel mainPanel;
+    
 
-    public Client() throws AlreadyBoundException, IOException {
-        super();
-        this.railFrame = new Rail(Color.blue);
-        this.mainPanel = new JPanel(null);
-        this.mainPanel.setVisible(true);
+    public Client(int trainBlock) throws AlreadyBoundException, IOException {
+       super();
+       this.railFrame = new Rail(Color.blue, trainBlock);
+       
+       
     }
 
     public Rail getRail() {
@@ -41,7 +42,7 @@ public class Client {
     public void addTrain(final ITrain train) throws RemoteException {
         this.railFrame.insertPoint(train);
 
-        JSlider slider = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, 1, TrainEngine.MAX_SPEED, 1);
         slider.setMajorTickSpacing(1);
         slider.setMinorTickSpacing(1);
         slider.setPaintTicks(true);
@@ -60,9 +61,8 @@ public class Client {
                 }
             }
         });
-
-        slider.setBounds((320*(train.getBlock()-1))+2, 530, 300, 80);       
-        this.mainPanel.add(slider);
+        slider.setBounds((320*(train.getBlock()-1))+2, 530, 300, 80);   
+        this.railFrame.add(slider);
     }
 
     public void start() {
@@ -71,7 +71,7 @@ public class Client {
     }
 
     public JPanel getSliderFrame() {
-        return mainPanel;
+        return railFrame;
     }
 
 }

@@ -5,7 +5,6 @@
  */
 package Controller;
 
-import Controller.Controller;
 import util.ITrain;
 
 import java.io.FileNotFoundException;
@@ -37,5 +36,10 @@ public class Facade {
 
     public void startMyTrain() throws RemoteException{
          this.controller.startMyTrain();
+    }
+    
+    public void loadTrains() throws IOException{
+        System.out.println("Loading trains...");
+        this.controller.loadTrains();
     }
 }

@@ -20,7 +20,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import java.util.TreeMap;
+import model.Server;
 import model.Train;
+import model.TrainWatcher;
 
 import util.ITrain;
 
@@ -31,7 +33,7 @@ import util.ITrain;
 public class Controller {
 
     private static final int PORT = 1234;
-    public static final int NUM_TRAINS = 2;
+    public static final int NUM_TRAINS = 3;
 
     private final ITrain myTrain;
     private final TreeMap<Integer, ITrain> trains;
@@ -40,12 +42,14 @@ public class Controller {
         this.trains = new TreeMap<>();
         this.myTrain = new Train(trainBlock);
         this.trains.put(myTrain.getBlock(), myTrain);
-        loadTrains();
+        Server server = new Server(myTrain, PORT+trainBlock);
+        server.start();
+        //loadTrains();
     }
 
     private boolean addTrain(String hostname, int key) throws RemoteException {
         try {
-            Registry registry = LocateRegistry.getRegistry(Controller.PORT);
+            Registry registry = LocateRegistry.getRegistry(Controller.PORT+key);
             //Registry registry = LocateRegistry.getRegistry("localhost", Controller.PORT+key);
             ITrain train = (ITrain) registry.lookup(hostname);
             this.trains.put(train.getBlock(), train);
@@ -57,7 +61,7 @@ public class Controller {
         }
     }
 
-    private void loadTrains() throws FileNotFoundException, IOException {
+    public void loadTrains() throws FileNotFoundException, IOException {
         String hostname;
 
         for (int i = 1; i <= Controller.NUM_TRAINS; i++) {
@@ -67,30 +71,39 @@ public class Controller {
 
                 if (!addTrain) {
                     throw new NoSuchObjectException("Train #" + i + " not found");
+                }else{
+                    System.out.println("Train #"+i+" was sucessfully loaded");
                 }
             }
         }
 
+        List<ITrain> t = new ArrayList<>();
+        Iterator<Integer> iterator = this.trains.keySet().iterator();
+        while(iterator.hasNext()){
+            t.add(this.trains.get(iterator.next()));
+        }
+        
+        TrainWatcher tw = new TrainWatcher(t);
+        tw.start();
+        //tw.setPriority(tw.MAX_PRIORITY);
     }
-    
-    public void startMyTrain() throws RemoteException{
+
+    public void startMyTrain() throws RemoteException {
         this.myTrain.start();
     }
 
     public void setSpeed(int block, int speed) throws RemoteException {
         this.trains.get(block).setSpeed(speed);
     }
-    
-    public Iterator<ITrain> getTrains(){
+
+    public Iterator<ITrain> getTrains() {
         List<ITrain> list = new ArrayList<>();
-        
-        for(Integer x : this.trains.keySet()){
+
+        for (Integer x : this.trains.keySet()) {
             list.add(this.trains.get(x));
         }
-        
+
         return list.iterator();
     }
-    
-    
 
 }

@@ -23,12 +23,12 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class Train extends UnicastRemoteObject implements ITrain, Comparable<Train> {
 
-    private final Point train;
+    private final TrainEngine train;
     private boolean ready;
 
     public Train(int trainBlock) throws RemoteException {
         super();
-        this.train = new Point(trainBlock);
+        this.train = new TrainEngine(trainBlock);
     }
 
     @Override
@@ -60,6 +60,31 @@ public class Train extends UnicastRemoteObject implements ITrain, Comparable<Tra
     public int getY() {
         return this.train.getY();
     }
+    
+    @Override
+    public Double distanceToCriticalRegion() {
+        return this.train.distanceToCriticalRegion();
+    }
+    
+    @Override
+    public boolean isOnCriticalRegion() {
+        return this.train.isOnCriticalRegion();
+    }
+    
+    @Override
+    public boolean hasPermissionCriticalRegion() {
+        return this.train.hasPermissionCriticalRegion();
+    }
+    
+    @Override
+    public void allowCriticalRegion(){
+        this.train.allowCriticalRegion();
+    }
+    
+    @Override
+     public boolean hasIntentionCriticalRegion() {
+         return this.train.hasIntentionCriticalRegion();
+     }
 
     @Override
     public boolean equals(Object o) {
@@ -84,6 +109,11 @@ public class Train extends UnicastRemoteObject implements ITrain, Comparable<Tra
     @Override
     public int compareTo(Train o) {
         return this.getBlock().compareTo(o.getBlock());
+    }
+
+    @Override
+    public void exitCriticalRegion() throws RemoteException {
+        this.train.exitCriticalRegion();
     }
 
 }
