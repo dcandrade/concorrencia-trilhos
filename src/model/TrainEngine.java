@@ -28,21 +28,20 @@ public class TrainEngine extends Thread {
     private boolean permissionCriticalRegion;
 
     public TrainEngine(int block) {
-        this.warningDistance=50*block;
-        this.safeDistance=warningDistance/4;
-        
+        this.warningDistance = 50 * block;
+        this.safeDistance = warningDistance / 4;
+
         this.intentCriticalRegion = false;
         this.permissionCriticalRegion = false;
         this.distance = 0;
-        
+
         if (block == TrainEngine.UPPER_BLOCK) {
             this.x0 = 395;//395, 45
             this.y0 = 45;
             this.numberComparison = 70;
 
             this.firstCriticalRegionPoint = new Point(595, 175);
-           this.lastCriticalRegionPoint = new Point(395, 175);
-           
+            this.lastCriticalRegionPoint = new Point(395, 175);
 
         } else if (block == TrainEngine.DOWN_LEFT_BLOCK) {
             this.x0 = 295;
@@ -51,16 +50,14 @@ public class TrainEngine extends Thread {
 
             this.firstCriticalRegionPoint = new Point(395, 175);
             this.lastCriticalRegionPoint = new Point(495, 375);
-            
+
         } else if (block == TrainEngine.DOWN_RIGHT_BLOCK) {
-            this.x0 = 695;
+            this.x0 = 495;
             this.y0 = 175;
-            this.distance = 200;
             this.numberComparison = 0;
             this.permissionCriticalRegion = true;
             this.firstCriticalRegionPoint = new Point(495, 375);
-           
-           this.lastCriticalRegionPoint = new Point(595, 175);
+            this.lastCriticalRegionPoint = new Point(595, 175);
 
         } else {
             throw new IllegalArgumentException("Invalid block number");
@@ -111,11 +108,11 @@ public class TrainEngine extends Thread {
             return this.y == this.firstCriticalRegionPoint.getY();
         } else if (this.block == TrainEngine.DOWN_RIGHT_BLOCK) {
 
-            return this.x==this.firstCriticalRegionPoint.getX()
-                    || (this.y==this.lastCriticalRegionPoint.getY() &&
-                        this.x<this.lastCriticalRegionPoint.getX());
+            return this.x == this.firstCriticalRegionPoint.getX()
+                    || (this.y == this.lastCriticalRegionPoint.getY()
+                    && this.x < this.lastCriticalRegionPoint.getX());
         } else {
-            return this.x>this.firstCriticalRegionPoint.getX() 
+            return this.x > this.firstCriticalRegionPoint.getX()
                     && this.y == this.firstCriticalRegionPoint.getY()
                     || this.x == this.lastCriticalRegionPoint.getX();
         }
@@ -145,23 +142,23 @@ public class TrainEngine extends Thread {
                 if (this.distanceToCriticalRegion() > this.stepSize + this.safeDistance) {
                     x += this.stepSize;
                     distance += this.stepSize;
-                }else if(this.hasPermissionCriticalRegion()){
+                } else if (this.hasPermissionCriticalRegion()) {
                     x += this.stepSize;
                     distance += this.stepSize;
                 }
             } else if (distance < 400 - numberComparison) {
-                if (this.distanceToCriticalRegion() > this.stepSize+ this.safeDistance) {
+                if (this.distanceToCriticalRegion() > this.stepSize + this.safeDistance) {
                     y += this.stepSize;
                     distance += this.stepSize;
-                }else if(this.hasPermissionCriticalRegion()){
+                } else if (this.hasPermissionCriticalRegion()) {
                     y += this.stepSize;
                     distance += this.stepSize;
                 }
             } else if (distance < 600 - numberComparison) {
-                if (this.distanceToCriticalRegion() > this.stepSize+ this.safeDistance) {
+                if (this.distanceToCriticalRegion() > this.stepSize + this.safeDistance) {
                     x -= this.stepSize;
                     distance += this.stepSize;
-                }else if(this.hasPermissionCriticalRegion()){
+                } else if (this.hasPermissionCriticalRegion()) {
                     x -= this.stepSize;
                     distance += this.stepSize;
                 }
@@ -169,29 +166,27 @@ public class TrainEngine extends Thread {
                 if (this.distanceToCriticalRegion() > this.stepSize + this.safeDistance) {
                     y -= this.stepSize;
                     distance += this.stepSize;
-                }else if(this.hasPermissionCriticalRegion()){
+                } else if (this.hasPermissionCriticalRegion()) {
                     y -= this.stepSize;
                     distance += this.stepSize;
                 }
             }
 
             if (distance >= 800 - numberComparison * 2) {
-                if(block == TrainEngine.DOWN_RIGHT_BLOCK){
-                    this.distance=200;
-                }else
-                    distance =0;
+
+                distance = 0;
                 //Reset the initial position
                 this.x = this.x0;
                 this.y = this.y0;
             }
-            
+
             //Rever algoritmo abaixo, precisa melhoorar
-            if (!this.hasIntentionCriticalRegion() 
-                    && this.distanceToCriticalRegion()>0 
-                    && this.distanceToCriticalRegion() < this.warningDistance) {
+            if (!this.hasIntentionCriticalRegion()
+                    && this.distanceToCriticalRegion() > 0
+                    && this.distanceToCriticalRegion() <= this.warningDistance) {
                 this.intentCriticalRegion();
-            } else if(!this.isOnCriticalRegion()  
-                    && this.distanceToCriticalRegion()> this.warningDistance){
+            } else if (!this.isOnCriticalRegion()
+                    && this.distanceToCriticalRegion() > this.warningDistance) {
                 this.exitCriticalRegion();
             }
 

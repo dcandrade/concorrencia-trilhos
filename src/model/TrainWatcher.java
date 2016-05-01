@@ -51,6 +51,11 @@ public class TrainWatcher extends Thread {
             TreeSet<ITrain> candidates = new TreeSet<>(this.comparator);
             ITrain trainOnCriticalRegion = null;
             while (true) {
+                for (ITrain t : this.trains) {
+                    if (t.isOnCriticalRegion()) {
+                        trainOnCriticalRegion = t;
+                    }
+                }
                 if (trainOnCriticalRegion != null) {
                     while (trainOnCriticalRegion.isOnCriticalRegion()); //espera trem sair
                     trainOnCriticalRegion.exitCriticalRegion();
