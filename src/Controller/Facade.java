@@ -5,7 +5,6 @@
  */
 package Controller;
 
-import Controller.Controller;
 import util.ITrain;
 
 import java.io.FileNotFoundException;
