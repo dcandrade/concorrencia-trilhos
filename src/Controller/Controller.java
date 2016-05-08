@@ -44,6 +44,7 @@ public class Controller {
         this.trains.put(myTrain.getBlock(), myTrain);
         Server server = new Server(myTrain, PORT+trainBlock);
         server.start();
+        myTrain.start();
         //loadTrains();
     }
 
