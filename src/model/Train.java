@@ -23,67 +23,67 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class Train extends UnicastRemoteObject implements ITrain, Comparable<Train> {
 
-    private final TrainEngine train;
+    private final TrainEngine engine;
     private boolean ready;
 
     public Train(int trainBlock) throws RemoteException {
         super();
-        this.train = new TrainEngine(trainBlock);
+        this.engine = new TrainEngine(trainBlock);
     }
 
     @Override
     public void start() throws RemoteException {
-        this.train.start();
+        this.engine.start();
     }
 
     @Override
     public void setSpeed(int newSpeed) throws RemoteException {
-        this.train.setStepSize(newSpeed);
+        this.engine.setStepSize(newSpeed);
     }
 
     @Override
     public Integer getBlock() {
-        return this.train.getBlock();
+        return this.engine.getBlock();
     }
 
     @Override
     public int getSpeed() {
-        return this.train.getSpeed();
+        return this.engine.getSpeed();
     }
 
     @Override
     public int getX() {
-        return this.train.getX();
+        return this.engine.getX();
     }
 
     @Override
     public int getY() {
-        return this.train.getY();
+        return this.engine.getY();
     }
     
     @Override
     public Double distanceToCriticalRegion() {
-        return this.train.distanceToCriticalRegion();
+        return this.engine.distanceToCriticalRegion();
     }
     
     @Override
     public boolean isOnCriticalRegion() {
-        return this.train.isOnCriticalRegion();
+        return this.engine.isOnCriticalRegion();
     }
     
     @Override
     public boolean hasPermissionCriticalRegion() {
-        return this.train.hasPermissionCriticalRegion();
+        return this.engine.hasPermissionCriticalRegion();
     }
     
     @Override
     public void allowCriticalRegion(){
-        this.train.allowCriticalRegion();
+        this.engine.allowCriticalRegion();
     }
     
     @Override
      public boolean hasIntentionCriticalRegion() {
-         return this.train.hasIntentionCriticalRegion();
+         return this.engine.hasIntentionCriticalRegion();
      }
 
     @Override
@@ -113,7 +113,22 @@ public class Train extends UnicastRemoteObject implements ITrain, Comparable<Tra
 
     @Override
     public void exitCriticalRegion() throws RemoteException {
-        this.train.exitCriticalRegion();
+        this.engine.exitCriticalRegion();
+    }
+
+    @Override
+    public float distanceLeftExitCriticalRegion() throws RemoteException {
+        return this.engine.distanceLeftExitCriticalRegion();
+    }
+
+    @Override
+    public void slowdown(float distance) throws RemoteException {
+        this.engine.slowdown(distance);
+    }
+
+    @Override
+    public void recoverSpeed() throws RemoteException {
+        this.engine.recoverSpeed();
     }
 
 }

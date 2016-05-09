@@ -6,9 +6,9 @@
 package model;
 
 import java.rmi.RemoteException;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.TreeSet;
 import util.ITrain;
 
 /**
@@ -18,10 +18,12 @@ import util.ITrain;
 public class TrainWatcher extends Thread {
 
     private final List<ITrain> trains;
+    private final ITrain myTrain;
     private final Comparator<ITrain> comparator;
 
-    public TrainWatcher(List<ITrain> trains) {
+    public TrainWatcher(List<ITrain> trains, ITrain myTrain) {
         this.trains = trains;
+        this.myTrain = myTrain;
 
         this.comparator = new Comparator<ITrain>() {
 
@@ -46,35 +48,20 @@ public class TrainWatcher extends Thread {
     @Override
     @SuppressWarnings("empty-statement")
     public void run() {
+        ITrain train;
 
         try {
-            TreeSet<ITrain> candidates = new TreeSet<>(this.comparator);
-            ITrain trainOnCriticalRegion = null;
             while (true) {
-                for (ITrain t : this.trains) {
-                    if (t.isOnCriticalRegion()) {
-                        trainOnCriticalRegion = t;
-                    }
-                }
-                if (trainOnCriticalRegion != null) {
-                    while (trainOnCriticalRegion.isOnCriticalRegion()); //espera trem sair
-                    trainOnCriticalRegion.exitCriticalRegion();
-                    trainOnCriticalRegion = null;
-                }
-                for (ITrain t : this.trains) {
-                    if (t.hasIntentionCriticalRegion()) {
-                        candidates.add(t);
-                    }
+                Collections.sort(this.trains, this.comparator);
+                train = this.trains.get(0);
+                
+                if (!this.myTrain.hasIntentionCriticalRegion()
+                        && train.hasIntentionCriticalRegion()) {
+                    train.allowCriticalRegion();
                 }
 
-                if (!candidates.isEmpty() && trainOnCriticalRegion == null) {
-                    trainOnCriticalRegion = candidates.pollFirst();
-                    trainOnCriticalRegion.allowCriticalRegion();
-                    synchronized (this) {
-                        wait(50);
-                    }
-                }
             }
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }

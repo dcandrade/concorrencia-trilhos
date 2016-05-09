@@ -44,47 +44,43 @@ public class Controller {
         this.trains.put(myTrain.getBlock(), myTrain);
         Server server = new Server(myTrain, PORT+trainBlock);
         server.start();
-        myTrain.start();
+        //myTrain.start();
         //loadTrains();
     }
 
-    private boolean addTrain(String hostname, int key) throws RemoteException {
+    private ITrain addTrain(String hostname, int key) throws RemoteException {
         try {
             Registry registry = LocateRegistry.getRegistry(Controller.PORT+key);
             //Registry registry = LocateRegistry.getRegistry("localhost", Controller.PORT+key);
             ITrain train = (ITrain) registry.lookup(hostname);
             this.trains.put(train.getBlock(), train);
-            return true;
+            return train;
         } catch (NotBoundException | AccessException ex) {
             System.err.println("Error while adding trains");
             System.err.println(ex.getMessage());
-            return false;
+            return null;
         }
     }
 
     public void loadTrains() throws FileNotFoundException, IOException {
         String hostname;
-
+        List<ITrain> otherTrains = new ArrayList<>();
+        
         for (int i = 1; i <= Controller.NUM_TRAINS; i++) {
             if (i != this.myTrain.getBlock()) {
                 hostname = "Train" + i;
-                boolean addTrain = this.addTrain(hostname, i);
+                ITrain train = this.addTrain(hostname, i);
 
-                if (!addTrain) {
+                if (train == null) {
                     throw new NoSuchObjectException("Train #" + i + " not found");
                 }else{
+                    otherTrains.add(train);
                     System.out.println("Train #"+i+" was sucessfully loaded");
                 }
             }
         }
-
-        List<ITrain> t = new ArrayList<>();
-        Iterator<Integer> iterator = this.trains.keySet().iterator();
-        while(iterator.hasNext()){
-            t.add(this.trains.get(iterator.next()));
-        }
         
-        TrainWatcher tw = new TrainWatcher(t);
+        TrainWatcher tw = new TrainWatcher(otherTrains, myTrain);
         tw.start();
     }
 

@@ -49,4 +49,10 @@ public interface ITrain extends Remote {
     public void allowCriticalRegion() throws RemoteException;
 
     public void exitCriticalRegion() throws RemoteException;
+
+    public float distanceLeftExitCriticalRegion() throws RemoteException;
+
+    public void slowdown(float distance) throws RemoteException;
+
+    public void recoverSpeed() throws RemoteException;
 }
