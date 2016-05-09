@@ -19,7 +19,8 @@ import java.rmi.server.UnicastRemoteObject;
 
 /**
  *
- * @author Daniel Andrade e Solenir Figuerêdo
+ * @author Daniel Andrade 
+ * @author Solenir Figuerêdo
  */
 public class Train extends UnicastRemoteObject implements ITrain, Comparable<Train> {
 
@@ -38,7 +39,7 @@ public class Train extends UnicastRemoteObject implements ITrain, Comparable<Tra
 
     @Override
     public void setSpeed(int newSpeed) throws RemoteException {
-        this.engine.setStepSize(newSpeed);
+        this.engine.setSpeed(newSpeed);
     }
 
     @Override

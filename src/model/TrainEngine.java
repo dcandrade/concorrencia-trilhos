@@ -5,7 +5,8 @@ import java.awt.geom.Point2D;
 
 /**
  *
- * @author solenir
+ * @author Daniel Andrade 
+ * @author Solenir Figuerêdo
  */
 public class TrainEngine extends Thread {
 
@@ -14,47 +15,51 @@ public class TrainEngine extends Thread {
     public static final int UPPER_BLOCK = 1;
     public static final int MAX_SPEED = 5;
     public static final int FREE_SPEED = -1;
+    
+    private static final int WARNING_DISTANCE = 10;
 
-    private final static int warningDistance = 10;
-
-    private int numberComparison;
+    private final int offset;
+    private final int block;
     private int perimeterPosition;
     private int x, x0, y, y0;
-    private int stepSize;
-    private final int block;
+    private int speed;
+    private int permissionsCriticalRegion;
+    private int foreignSpeed;
+
+    private boolean intentCriticalRegion;
+
     private final Point2D firstCriticalRegionPoint;
     private final Point2D lastCriticalRegionPoint;
-    private boolean intentCriticalRegion;
-    private int permissionCriticalRegion;
-    private int foreignSpeed;
 
     public TrainEngine(int block) {
         this.foreignSpeed = TrainEngine.FREE_SPEED;
 
-        this.intentCriticalRegion = false;
-        this.permissionCriticalRegion = 0;
         this.perimeterPosition = 0;
 
         if (block == TrainEngine.UPPER_BLOCK) {
-            this.x0 = 395;//395, 45
+            this.x0 = 395;
             this.y0 = 45;
-            this.numberComparison = 70;
-
+            this.offset = 70;
+            this.permissionsCriticalRegion = 0;
+            this.intentCriticalRegion = false;
             this.firstCriticalRegionPoint = new Point(595, 175);
             this.lastCriticalRegionPoint = new Point(395, 175);
 
         } else if (block == TrainEngine.DOWN_LEFT_BLOCK) {
             this.x0 = 295;
             this.y0 = 175;
-            this.numberComparison = 0;
+            this.offset = 0;
+            this.permissionsCriticalRegion = 0;
+            this.intentCriticalRegion = false;
             this.firstCriticalRegionPoint = new Point(395, 175);
             this.lastCriticalRegionPoint = new Point(495, 375);
 
         } else if (block == TrainEngine.DOWN_RIGHT_BLOCK) {
             this.x0 = 495;
             this.y0 = 175;
-            this.permissionCriticalRegion = 2;
-            this.numberComparison = 0;
+            this.permissionsCriticalRegion = 2;
+            this.intentCriticalRegion = true;
+            this.offset = 0;
             this.firstCriticalRegionPoint = new Point(495, 375);
             this.lastCriticalRegionPoint = new Point(595, 175);
 
@@ -65,19 +70,11 @@ public class TrainEngine extends Thread {
         this.block = block;
         this.x = x0;
         this.y = y0;
-        this.stepSize = 1;
+        this.speed = 1;
     }
 
     public int getBlock() {
         return block;
-    }
-
-    public void setNumberComparison(int numberComparison) {
-        this.numberComparison = numberComparison;
-    }
-
-    protected synchronized void setStepSize(int stepSize) {
-        this.stepSize = stepSize;
     }
 
     private void intentCriticalRegion() {
@@ -90,15 +87,15 @@ public class TrainEngine extends Thread {
 
     public void exitCriticalRegion() {
         this.intentCriticalRegion = false;
-        this.permissionCriticalRegion = 0;
+        this.permissionsCriticalRegion = 0;
     }
 
     public void allowCriticalRegion() {
-        this.permissionCriticalRegion++;
+        this.permissionsCriticalRegion++;
     }
 
     public boolean hasPermissionCriticalRegion() {
-        return permissionCriticalRegion>=2;
+        return permissionsCriticalRegion >= 2;
     }
 
     public float distanceLeftExitCriticalRegion() {
@@ -142,9 +139,9 @@ public class TrainEngine extends Thread {
 
     public int getSpeed() {
         if (this.foreignSpeed == TrainEngine.FREE_SPEED) {
-            return this.stepSize;
-        } else if (this.stepSize < this.foreignSpeed) {
-            return this.stepSize;
+            return this.speed;
+        } else if (this.speed < this.foreignSpeed) {
+            return this.speed;
         }
 
         return this.foreignSpeed;
@@ -158,44 +155,45 @@ public class TrainEngine extends Thread {
         this.foreignSpeed = TrainEngine.FREE_SPEED;
     }
 
+    public void setSpeed(int stepSize) {
+        this.speed = stepSize;
+    }
+
     private void move(int distance) {
 
         if (this.perimeterPosition < 200) {
-            this.y = this.y0; //Fix possible offset
+            this.y = this.y0; //Fix possible deviation
             this.x += distance;
             this.perimeterPosition += distance;
-        } else if (this.perimeterPosition < 400 - numberComparison) {
+        } else if (this.perimeterPosition < 400 - offset) {
             this.x = this.x0 + 200;
             this.y += distance;
             this.perimeterPosition += distance;
-        } else if (this.perimeterPosition < 600 - numberComparison) {
-            this.y = y0 + 200 - numberComparison;
+        } else if (this.perimeterPosition < 600 - offset) {
+            this.y = y0 + 200 - offset;
             this.x -= distance;
             this.perimeterPosition += distance;
-        } else if (this.perimeterPosition < 800 - numberComparison) {
+        } else if (this.perimeterPosition < 800 - offset) {
             this.x = x0;
             this.y -= distance;
             this.perimeterPosition += distance;
 
-            if (this.perimeterPosition >= 800 - numberComparison * 2) {
+            if (this.perimeterPosition >= 800 - offset * 2) {
                 this.perimeterPosition = 0;
-                this.x = this.x0;
-                this.y = this.y0;
             }
         }
     }
 
     @Override
     public void run() {
-        //this.intentCriticalRegion();
         while (true) {
-            if (this.distanceToCriticalRegion() > TrainEngine.warningDistance) {
+            if (this.distanceToCriticalRegion() > TrainEngine.WARNING_DISTANCE) {
                 this.move(this.getSpeed());
                 this.exitCriticalRegion();
             } else if (this.hasPermissionCriticalRegion()) {
                 this.move(this.getSpeed());
-            }else if(!this.hasIntentionCriticalRegion() && 
-                    this.distanceToCriticalRegion()<= TrainEngine.warningDistance){
+            } else if (!this.hasIntentionCriticalRegion()
+                    && this.distanceToCriticalRegion() <= TrainEngine.WARNING_DISTANCE) {
                 this.intentCriticalRegion();
             }
 

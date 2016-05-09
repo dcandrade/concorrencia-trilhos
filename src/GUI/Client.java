@@ -1,6 +1,5 @@
 package GUI;
 
-import Controller.Controller;
 import model.Rail;
 import java.awt.Color;
 
@@ -16,7 +15,8 @@ import util.ITrain;
 
 /**
  *
- * @author solenir
+ * @author Daniel Andrade 
+ * @author Solenir Figuerêdo
  */
 public class Client {
 
@@ -26,8 +26,6 @@ public class Client {
     public Client(int trainBlock) throws AlreadyBoundException, IOException {
        super();
        this.railFrame = new Rail(Color.blue, trainBlock);
-       
-       
     }
 
     public Rail getRail() {
@@ -40,7 +38,7 @@ public class Client {
   
 
     public void addTrain(final ITrain train) throws RemoteException {
-        this.railFrame.insertPoint(train);
+        this.railFrame.insertTrain(train);
 
         JSlider slider = new JSlider(JSlider.HORIZONTAL, 1, TrainEngine.MAX_SPEED, 1);
         slider.setMajorTickSpacing(1);

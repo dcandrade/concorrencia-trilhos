@@ -14,34 +14,35 @@ import util.ITrain;
 
 /**
  *
- * @author solenir
+ * @author Daniel Andrade 
+ * @author Solenir Figuerêdo
  */
 public class Rail extends JPanel implements Runnable {
 
     private final Color color;
-    private final List<ITrain> points;
+    private final List<ITrain> trains;
     private final int trainBlock;
-    public static int REFRESH_RATE = 15;
+    public static int REFRESH_RATE = 10;
 
     public Rail(Color color, int trainBlock) {
         super();
         setLayout(null);
         setSize(994, 672);
-        this.points = new ArrayList<>();
+        this.trains = new ArrayList<>();
         repaint();
         this.color = color;
         this.trainBlock = trainBlock;
     }
 
-    private void startPoints() throws RemoteException {
-        for (ITrain ponto : this.points) {
-            ponto.start();
+    private void startTrains() throws RemoteException {
+        for (ITrain train : this.trains) {
+            train.start();
             //System.out.println("O bloco correspondente foi "+ ponto.getBlock());
         }
     }
 
-    public void insertPoint(ITrain point) {
-        this.points.add(point);
+    public void insertTrain(ITrain point) {
+        this.trains.add(point);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class Rail extends JPanel implements Runnable {
         super.paintComponent(g);
         g.setColor(this.color);
 
-        for (ITrain ponto : this.points) {
+        for (ITrain ponto : this.trains) {
             try {
                 if (ponto.getBlock() == this.trainBlock) {
                     g.setColor(Color.BLACK);
@@ -77,7 +78,7 @@ public class Rail extends JPanel implements Runnable {
             this.repaint();
 
             while (true) {
-                sleep(Rail.REFRESH_RATE - 5);
+                sleep(Rail.REFRESH_RATE);
                 this.repaint();
 
             }

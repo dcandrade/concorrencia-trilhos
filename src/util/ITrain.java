@@ -18,7 +18,8 @@ import java.rmi.RemoteException;
 
 /**
  *
- * @author Daniel Andrade e Solenir Figuerêdo
+ * @author Daniel Andrade 
+ * @author Solenir Figuerêdo
  */
 public interface ITrain extends Remote {
 

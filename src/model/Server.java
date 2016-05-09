@@ -23,7 +23,8 @@ import util.ITrain;
 
 /**
  *
- * @author Daniel Andrade e Solenir Figuerêdo
+ * @author Daniel Andrade 
+ * @author Solenir Figuerêdo
  */
 public class Server extends UnicastRemoteObject implements Runnable {
 

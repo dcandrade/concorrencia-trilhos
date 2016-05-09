@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
 import java.rmi.RemoteException;
@@ -13,7 +8,8 @@ import util.ITrain;
 
 /**
  *
- * @author dcandrade
+ * @author Daniel Andrade 
+ * @author Solenir Figuerêdo
  */
 public class TrainWatcher extends Thread {
 
@@ -32,12 +28,12 @@ public class TrainWatcher extends Thread {
                 try {
                     return o1.distanceToCriticalRegion().compareTo(o2.distanceToCriticalRegion());
                 } catch (RemoteException ex) {
-                    ex.printStackTrace();
+                    System.err.println(ex.getMessage());
                 } catch (IllegalArgumentException ex2) {
                     try {
                         return Integer.compare(o1.getBlock(), o2.getBlock());
                     } catch (RemoteException ex3) {
-                        ex3.printStackTrace();
+                        System.err.println(ex3.getMessage());
                     }
                 }
                 return 0;
@@ -46,7 +42,6 @@ public class TrainWatcher extends Thread {
     }
 
     @Override
-    @SuppressWarnings("empty-statement")
     public void run() {
         ITrain train;
 
@@ -54,7 +49,7 @@ public class TrainWatcher extends Thread {
             while (true) {
                 Collections.sort(this.trains, this.comparator);
                 train = this.trains.get(0);
-                
+
                 if (!this.myTrain.hasIntentionCriticalRegion()
                         && train.hasIntentionCriticalRegion()) {
                     train.allowCriticalRegion();
@@ -63,7 +58,7 @@ public class TrainWatcher extends Thread {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            System.err.println(ex.getMessage());
         }
     }
 
