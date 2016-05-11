@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import java.util.TreeMap;
+import javax.rmi.ssl.SslRMIClientSocketFactory;
 import javax.swing.JPanel;
 
 import model.Server;
@@ -50,7 +51,7 @@ public class Controller {
 
     private ITrain addTrain(String hostname, int key) throws RemoteException {
         try {
-            Registry registry = LocateRegistry.getRegistry(Controller.PORT + key);
+            Registry registry = LocateRegistry.getRegistry(null, Controller.PORT + key, new SslRMIClientSocketFactory());
             //Registry registry = LocateRegistry.getRegistry("localhost", Controller.PORT+key);
             ITrain train = (ITrain) registry.lookup(hostname);
             this.trains.put(train.getBlock(), train);
