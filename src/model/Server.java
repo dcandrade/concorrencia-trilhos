@@ -19,6 +19,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import javax.rmi.ssl.SslRMIClientSocketFactory;
+import javax.rmi.ssl.SslRMIServerSocketFactory;
 import util.ITrain;
 
 /**
@@ -32,7 +34,7 @@ public class Server extends UnicastRemoteObject implements Runnable {
     private final ITrain train;
 
     public Server(ITrain train, int port) throws RemoteException, MalformedURLException, AlreadyBoundException {
-        super();
+        super(0,new SslRMIClientSocketFactory(), new SslRMIServerSocketFactory(null, null, true));
         this.train = train;
         this.port = port;
     }
@@ -45,9 +47,9 @@ public class Server extends UnicastRemoteObject implements Runnable {
     @Override
     public void run() {
         try {
-            LocateRegistry.createRegistry(port);
+            LocateRegistry.createRegistry(port, new SslRMIClientSocketFactory(), new SslRMIServerSocketFactory(null, null, true));
             System.setProperty("java.rmi.server.hostname", "localhost");
-            Registry registry = LocateRegistry.getRegistry(port);
+            Registry registry = LocateRegistry.getRegistry(null, port, new SslRMIClientSocketFactory());
             registry.rebind("Train" + train.getBlock(), train);
             System.err.println("Server online");
         } catch (RemoteException ex) {
