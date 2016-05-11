@@ -32,6 +32,12 @@ public class MainWindow {
     private final Facade facade;
 
     public MainWindow(String title, int trainBlock) throws AlreadyBoundException, IOException, RemoteException, NotBoundException {
+        
+        System.setProperty("javax.net.ssl.keyStore", "keystore.jks");
+        System.setProperty("javax.net.ssl.keyStorePassword", "password");
+        System.setProperty("javax.net.ssl.trustStore", "keystore.jks");
+        System.setProperty("javax.net.ssl.trustStorePassword", "password");
+        
         this.frame = new JFrame(title);
         this.facade = new Facade(trainBlock);
         this.container = new JPanel(new CardLayout());
