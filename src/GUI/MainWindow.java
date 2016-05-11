@@ -9,11 +9,13 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Properties;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -32,12 +34,15 @@ public class MainWindow {
     private final Facade facade;
 
     public MainWindow(String title, int trainBlock) throws AlreadyBoundException, IOException, RemoteException, NotBoundException {
-        
+       /*
+        System.setProperty("javax.net.ssl.debug", "all");
         System.setProperty("javax.net.ssl.keyStore", "keystore.jks");
         System.setProperty("javax.net.ssl.keyStorePassword", "password");
         System.setProperty("javax.net.ssl.trustStore", "keystore.jks");
         System.setProperty("javax.net.ssl.trustStorePassword", "password");
-        
+        System.setProperty("javax.net.ssl.trustStoreType","JCEKS");
+        */
+
         this.frame = new JFrame(title);
         this.facade = new Facade(trainBlock);
         this.container = new JPanel(new CardLayout());
@@ -101,10 +106,12 @@ public class MainWindow {
     }
 
     public static void main(String[] args) throws AlreadyBoundException, IOException, RemoteException, NotBoundException {
+        System.setProperty("java.awt.headless", "false");
         MainWindow mainWindow;
-        mainWindow = new MainWindow("nome", TrainEngine.UPPER_BLOCK);
-        mainWindow = new MainWindow("nome", TrainEngine.DOWN_RIGHT_BLOCK);
-        mainWindow = new MainWindow("nome", TrainEngine.DOWN_LEFT_BLOCK);
+        Properties cfg = new Properties();
+            cfg.load(new FileInputStream("data.properties"));
+        mainWindow = new MainWindow("nome", Integer.parseInt(cfg.getProperty("myTrain")));
+       
     }
 
 }

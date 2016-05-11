@@ -1,5 +1,6 @@
 package Controller;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -13,6 +14,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
 import java.util.TreeMap;
 import javax.rmi.ssl.SslRMIClientSocketFactory;
@@ -49,10 +51,14 @@ public class Controller {
         server.start();
     }
 
-    private ITrain addTrain(String hostname, int key) throws RemoteException {
+    private ITrain addTrain(String hostname, int key) throws RemoteException, FileNotFoundException, IOException {
         try {
-            Registry registry = LocateRegistry.getRegistry(null, Controller.PORT + key, new SslRMIClientSocketFactory());
-            //Registry registry = LocateRegistry.getRegistry("localhost", Controller.PORT+key);
+            //Registry registry = LocateRegistry.getRegistry(null, Controller.PORT + key, new SslRMIClientSocketFactory());
+            //Registry registry = LocateRegistry.getRegistry(Controller.PORT + key);
+            Properties cfg = new Properties();
+            cfg.load(new FileInputStream("data.properties"));
+            String host =  cfg.getProperty("train"+key);
+            Registry registry = LocateRegistry.getRegistry(host, Controller.PORT+key);
             ITrain train = (ITrain) registry.lookup(hostname);
             this.trains.put(train.getBlock(), train);
             this.client.addTrain(train);
