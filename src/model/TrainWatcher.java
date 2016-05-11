@@ -8,7 +8,7 @@ import util.ITrain;
 
 /**
  *
- * @author Daniel Andrade 
+ * @author Daniel Andrade
  * @author Solenir Figuerêdo
  */
 public class TrainWatcher extends Thread {
@@ -27,14 +27,13 @@ public class TrainWatcher extends Thread {
             public int compare(ITrain o1, ITrain o2) {
                 try {
                     return o1.distanceToCriticalRegion().compareTo(o2.distanceToCriticalRegion());
-                } catch (RemoteException ex) {
-                    System.err.println(ex.getMessage());
-                } catch (IllegalArgumentException ex2) {
+                } catch (Exception ex) {
                     try {
                         return Integer.compare(o1.getBlock(), o2.getBlock());
-                    } catch (RemoteException ex3) {
-                        System.err.println(ex3.getMessage());
+                    } catch (RemoteException ex1) {
+                        System.err.println(ex1.getMessage());
                     }
+
                 }
                 return 0;
             }

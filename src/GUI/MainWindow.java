@@ -14,17 +14,15 @@ import java.io.IOException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.Iterator;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import model.TrainEngine;
-import util.ITrain;
 
 /**
  *
- * @author Daniel Andrade 
+ * @author Daniel Andrade
  * @author Solenir Figuerêdo
  */
 public class MainWindow {
@@ -32,15 +30,13 @@ public class MainWindow {
     private final JFrame frame;
     private final Container container;
     private final Facade facade;
-    private final Client client;
 
     public MainWindow(String title, int trainBlock) throws AlreadyBoundException, IOException, RemoteException, NotBoundException {
         this.frame = new JFrame(title);
         this.facade = new Facade(trainBlock);
-        this.client = new Client(trainBlock);
         this.container = new JPanel(new CardLayout());
 
-        this.container.add(client.getSliderFrame(), "initialPanel");
+        this.container.add(facade.getFrame(), "initialPanel");
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(this.container);
@@ -56,20 +52,8 @@ public class MainWindow {
         this.frame.setLocation((tela.width - width) / 2, (tela.height - height) / 2);
     }
 
-    private void loadTrains() throws RemoteException, IOException {
-        this.facade.loadTrains();
-        Iterator<ITrain> trains = this.facade.getTrains();
-
-        while (trains.hasNext()) {
-            this.client.addTrain(trains.next());
-        }
-
-        this.client.repaintRail();
-    }
-
     private void setupPanel() throws RemoteException, NotBoundException {
         ((CardLayout) container.getLayout()).show(container, "initialPanel");
-        this.client.repaintRail();
 
         JButton buttonInitial = new JButton("Iniciar");
         buttonInitial.setBounds(850, 80, 100, 50);
@@ -96,17 +80,16 @@ public class MainWindow {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    loadTrains();
+                    facade.loadTrains();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
             }
         });
 
-        this.client.getSliderFrame().add(load);
-        this.client.getSliderFrame().add(buttonInitial);
+        this.facade.getFrame().add(load);
+        this.facade.getFrame().add(buttonInitial);
 
-        this.client.start();
         this.frame.setVisible(true);
 
     }

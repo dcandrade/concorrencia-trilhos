@@ -8,10 +8,11 @@ import java.io.IOException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.util.Iterator;
+import javax.swing.JPanel;
 
 /**
  *
- * @author Daniel Andrade 
+ * @author Daniel Andrade
  * @author Solenir Figuerêdo
  */
 public class Facade {
@@ -26,16 +27,20 @@ public class Facade {
         this.controller.setSpeed(block, speed);
     }
 
-    public Iterator<ITrain> getTrains(){
+    public Iterator<ITrain> getTrains() {
         return this.controller.getTrains();
     }
 
-    public void startMyTrain() throws RemoteException{
-         this.controller.startMyTrain();
+    public void startMyTrain() throws RemoteException {
+        this.controller.startMyTrain();
     }
-    
-    public void loadTrains() throws IOException{
+
+    public void loadTrains() throws IOException {
         System.out.println("Loading trains...");
         this.controller.loadTrains();
+    }
+
+    public JPanel getFrame() {
+        return this.controller.getFrame();
     }
 }
