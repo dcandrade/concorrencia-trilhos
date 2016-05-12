@@ -14,9 +14,8 @@ public class TrainEngine extends Thread {
     public static final int DOWN_RIGHT_BLOCK = 2;
     public static final int UPPER_BLOCK = 1;
     public static final int MAX_SPEED = 10;
-    public static final int FREE_SPEED = -1;
     
-    private static final int WARNING_DISTANCE = 10;
+    public static final int WARNING_DISTANCE = 10;
 
     private final int offset;
     private final int block;
@@ -24,7 +23,7 @@ public class TrainEngine extends Thread {
     private int x, x0, y, y0;
     private double speed;
     private int permissionsCriticalRegion;
-    private double foreignSpeed;
+    private boolean isLimited;
 
     private boolean intentCriticalRegion;
 
@@ -32,7 +31,7 @@ public class TrainEngine extends Thread {
     private final Point2D lastCriticalRegionPoint;
 
     public TrainEngine(int block) {
-        this.foreignSpeed = TrainEngine.FREE_SPEED;
+        this.isLimited = false;
 
         this.perimeterPosition = 0;
 
@@ -138,25 +137,23 @@ public class TrainEngine extends Thread {
     }
 
     public double getSpeed() {
-        if (this.foreignSpeed == TrainEngine.FREE_SPEED) {
-            return this.speed;
-        } else if (this.speed < this.foreignSpeed) {
-            return this.speed;
-        }
-
-        return this.foreignSpeed;
+        return this.speed;
     }
 
-    public void slowdown(float distance) {
-        this.foreignSpeed = Math.round(distance / TrainEngine.MAX_SPEED);
+    public void limit() {
+        this.isLimited = true;
+    }
+    
+    public void unlimit() {
+        this.isLimited = false;
     }
 
-    public void recoverSpeed() {
-        this.foreignSpeed = TrainEngine.FREE_SPEED;
+    public boolean isLimited() {
+        return isLimited;
     }
 
-    public void setSpeed(int stepSize) {
-        this.speed = stepSize;
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 
     private void move(double distance) {

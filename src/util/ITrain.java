@@ -23,7 +23,7 @@ import java.rmi.RemoteException;
  */
 public interface ITrain extends Remote {
 
-    public void setSpeed(int newSpeed) throws RemoteException;
+    public void setSpeed(int speed) throws RemoteException;
 
     public Integer getBlock() throws RemoteException;
 
@@ -38,6 +38,8 @@ public interface ITrain extends Remote {
     public boolean noIsReady() throws RemoteException;
 
     public void setReady() throws RemoteException;
+    
+     public boolean isLimited() throws RemoteException;
 
     public Double distanceToCriticalRegion() throws RemoteException;
 
@@ -53,7 +55,7 @@ public interface ITrain extends Remote {
 
     public float distanceLeftExitCriticalRegion() throws RemoteException;
 
-    public void slowdown(float distance) throws RemoteException;
-
-    public void recoverSpeed() throws RemoteException;
+    public void limit() throws RemoteException;
+    
+    public void unlimit() throws RemoteException;
 }

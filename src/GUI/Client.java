@@ -65,6 +65,10 @@ public class Client implements Runnable {
                 if (!j.getValueIsAdjusting()) {
                     try {
                         train.setSpeed((int) j.getValue());
+                        if (myTrain.hasPermissionCriticalRegion()
+                                && Integer.compare(train.getBlock(), myTrain.getBlock()) != 0) {
+                            train.limit();
+                        }
                     } catch (RemoteException ex) {
                         System.err.println(ex.getLocalizedMessage());
                     }
@@ -105,7 +109,13 @@ public class Client implements Runnable {
                 for (ITrain train : this.trains) {
                     if (Integer.compare(this.myTrain.getBlock(), train.getBlock()) != 0) {
                         this.sliders[train.getBlock() - 1].setEnabled(myTrain.isOnCriticalRegion());
+                    }else{
+                        this.sliders[train.getBlock() - 1].setEnabled(!train.isLimited());
                     }
+                    if (!myTrain.isOnCriticalRegion() && myTrain.hasPermissionCriticalRegion()) {
+                        train.unlimit();
+                    }
+                    
                 }
             }
         } catch (RemoteException ex) {

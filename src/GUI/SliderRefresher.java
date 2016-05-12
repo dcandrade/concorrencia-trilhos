@@ -30,7 +30,7 @@ public class SliderRefresher implements Runnable {
                 for (ITrain train : this.trains) {
                     this.sliders[train.getBlock() - 1].setValue((int) train.getSpeed());
                 }
-                Thread.sleep(500);
+                Thread.sleep(2000);
             }
         } catch (RemoteException | InterruptedException ex) {
             System.err.println(ex.getMessage());

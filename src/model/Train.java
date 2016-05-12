@@ -17,8 +17,6 @@ import util.ITrain;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Comparator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -70,14 +68,18 @@ public class Train extends UnicastRemoteObject implements ITrain, Comparable<Tra
         };
     }
 
+    public boolean isLimited() {
+        return this.engine.isLimited();
+    }
+
     @Override
     public void start() throws RemoteException {
         this.engine.start();
     }
 
     @Override
-    public void setSpeed(int newSpeed) throws RemoteException {
-        this.engine.setSpeed(newSpeed);
+    public void setSpeed(int speed) throws RemoteException {
+        this.engine.setSpeed(speed);
     }
 
     @Override
@@ -160,14 +162,13 @@ public class Train extends UnicastRemoteObject implements ITrain, Comparable<Tra
         return this.engine.distanceLeftExitCriticalRegion();
     }
 
-    @Override
-    public void slowdown(float distance) throws RemoteException {
-        this.engine.slowdown(distance);
+    public void unlimit() {
+        this.engine.unlimit();
     }
 
     @Override
-    public void recoverSpeed() throws RemoteException {
-        this.engine.recoverSpeed();
+    public void limit() throws RemoteException {
+        this.engine.limit();
     }
 
 }
