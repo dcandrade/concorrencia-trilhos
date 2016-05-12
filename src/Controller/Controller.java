@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 import model.Server;
 import model.Train;
 import model.TrainWatcher;
-import model.Client;
+import GUI.Client;
 
 import util.ITrain;
 

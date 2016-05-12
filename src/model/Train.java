@@ -16,6 +16,9 @@ package model;
 import util.ITrain;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Comparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -32,6 +35,39 @@ public class Train extends UnicastRemoteObject implements ITrain, Comparable<Tra
     public Train(int trainBlock) throws RemoteException {
         super();
         this.engine = new TrainEngine(trainBlock);
+    }
+
+    public static Comparator<ITrain> getDistanceComparator() {
+        return new Comparator<ITrain>() {
+
+            @Override
+            public int compare(ITrain o1, ITrain o2) {
+                try {
+                    return o1.distanceToCriticalRegion().compareTo(o2.distanceToCriticalRegion());
+                } catch (Exception ex) {
+                    try {
+                        return Integer.compare(o1.getBlock(), o2.getBlock());
+                    } catch (RemoteException ex1) {
+                        System.err.println(ex1.getMessage());
+                    }
+
+                }
+                return 0;
+            }
+        };
+    }
+
+    public static Comparator<ITrain> getBlockComparator() {
+        return new Comparator<ITrain>() {
+            @Override
+            public int compare(ITrain o1, ITrain o2) {
+                try {
+                    return Integer.compare(o1.getBlock(), o2.getBlock());
+                } catch (RemoteException ex) {
+                    return 0;
+                }
+            }
+        };
     }
 
     @Override

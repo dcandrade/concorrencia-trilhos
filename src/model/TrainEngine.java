@@ -10,8 +10,8 @@ import java.awt.geom.Point2D;
  */
 public class TrainEngine extends Thread {
 
-    public static final int DOWN_LEFT_BLOCK = 2;
-    public static final int DOWN_RIGHT_BLOCK = 3;
+    public static final int DOWN_LEFT_BLOCK = 3;
+    public static final int DOWN_RIGHT_BLOCK = 2;
     public static final int UPPER_BLOCK = 1;
     public static final int MAX_SPEED = 10;
     public static final int FREE_SPEED = -1;

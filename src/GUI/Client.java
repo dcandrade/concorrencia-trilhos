@@ -1,4 +1,4 @@
-package model;
+package GUI;
 
 import java.awt.Color;
 
@@ -6,11 +6,19 @@ import java.io.IOException;
 
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
 
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import model.Rail;
+import model.Train;
+import model.TrainEngine;
 
 import util.ITrain;
 
@@ -23,12 +31,14 @@ public class Client implements Runnable {
 
     private final Rail railFrame;
     private final ITrain myTrain;
+    private final ITrain[] trains;
     private final JSlider[] sliders;
 
     public Client(ITrain myTrain) throws AlreadyBoundException, IOException {
         super();
         this.myTrain = myTrain;
         this.railFrame = new Rail(Color.blue, myTrain.getBlock());
+        this.trains = new ITrain[Train.NUM_TRAINS];
         this.sliders = new JSlider[Train.NUM_TRAINS];
         this.addTrain(myTrain);
     }
@@ -63,6 +73,9 @@ public class Client implements Runnable {
         });
         slider.setBounds((320 * (train.getBlock() - 1)) + 2, 530, 300, 80);
         slider.setEnabled(true);
+        this.trains[train.getBlock() - 1] = train;
+        this.sliders[train.getBlock() - 1] = slider;
+
         return slider;
     }
 
@@ -70,13 +83,14 @@ public class Client implements Runnable {
         this.railFrame.insertTrain(train);
         JSlider slider = this.buildSlider(train);
         this.railFrame.add(slider);
-        this.sliders[train.getBlock() - 1] = slider;
     }
 
     public void start() {
         Thread thread = new Thread(this.railFrame);
         thread.start();
         thread = new Thread(this);
+        thread.start();
+        thread = new Thread(new SliderRefresher(this.trains, this.sliders));
         thread.start();
     }
 
@@ -88,11 +102,9 @@ public class Client implements Runnable {
     public void run() {
         try {
             while (true) {
-                for (int i = 0; i < this.sliders.length; i++) {
-                    if (i == this.myTrain.getBlock() - 1) {
-                        this.sliders[i].setEnabled(true);
-                    } else {
-                        this.sliders[i].setEnabled(this.myTrain.hasPermissionCriticalRegion());
+                for (ITrain train : this.trains) {
+                    if (Integer.compare(this.myTrain.getBlock(), train.getBlock()) != 0) {
+                        this.sliders[train.getBlock() - 1].setEnabled(myTrain.isOnCriticalRegion());
                     }
                 }
             }

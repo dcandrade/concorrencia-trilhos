@@ -21,23 +21,7 @@ public class TrainWatcher extends Thread {
         this.trains = trains;
         this.myTrain = myTrain;
 
-        this.comparator = new Comparator<ITrain>() {
-
-            @Override
-            public int compare(ITrain o1, ITrain o2) {
-                try {
-                    return o1.distanceToCriticalRegion().compareTo(o2.distanceToCriticalRegion());
-                } catch (Exception ex) {
-                    try {
-                        return Integer.compare(o1.getBlock(), o2.getBlock());
-                    } catch (RemoteException ex1) {
-                        System.err.println(ex1.getMessage());
-                    }
-
-                }
-                return 0;
-            }
-        };
+        this.comparator = Train.getDistanceComparator();
     }
 
     @Override
