@@ -13,18 +13,18 @@ public class TrainEngine extends Thread {
     public static final int DOWN_LEFT_BLOCK = 2;
     public static final int DOWN_RIGHT_BLOCK = 3;
     public static final int UPPER_BLOCK = 1;
-    public static final int MAX_SPEED = 5;
+    public static final int MAX_SPEED = 10;
     public static final int FREE_SPEED = -1;
     
     private static final int WARNING_DISTANCE = 10;
 
     private final int offset;
     private final int block;
-    private int perimeterPosition;
+    private double perimeterPosition;
     private int x, x0, y, y0;
-    private int speed;
+    private double speed;
     private int permissionsCriticalRegion;
-    private int foreignSpeed;
+    private double foreignSpeed;
 
     private boolean intentCriticalRegion;
 
@@ -137,7 +137,7 @@ public class TrainEngine extends Thread {
         return y;
     }
 
-    public int getSpeed() {
+    public double getSpeed() {
         if (this.foreignSpeed == TrainEngine.FREE_SPEED) {
             return this.speed;
         } else if (this.speed < this.foreignSpeed) {
@@ -159,7 +159,7 @@ public class TrainEngine extends Thread {
         this.speed = stepSize;
     }
 
-    private void move(int distance) {
+    private void move(double distance) {
 
         if (this.perimeterPosition < 200) {
             this.y = this.y0; //Fix possible deviation

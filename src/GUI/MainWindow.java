@@ -34,14 +34,14 @@ public class MainWindow {
     private final Facade facade;
 
     public MainWindow(String title, int trainBlock) throws AlreadyBoundException, IOException, RemoteException, NotBoundException {
-       /*
-        System.setProperty("javax.net.ssl.debug", "all");
-        System.setProperty("javax.net.ssl.keyStore", "keystore.jks");
-        System.setProperty("javax.net.ssl.keyStorePassword", "password");
-        System.setProperty("javax.net.ssl.trustStore", "keystore.jks");
-        System.setProperty("javax.net.ssl.trustStorePassword", "password");
-        System.setProperty("javax.net.ssl.trustStoreType","JCEKS");
-        */
+        /*
+         System.setProperty("javax.net.ssl.debug", "all");
+         System.setProperty("javax.net.ssl.keyStore", "keystore.jks");
+         System.setProperty("javax.net.ssl.keyStorePassword", "password");
+         System.setProperty("javax.net.ssl.trustStore", "keystore.jks");
+         System.setProperty("javax.net.ssl.trustStorePassword", "password");
+         System.setProperty("javax.net.ssl.trustStoreType","JCEKS");
+         */
 
         this.frame = new JFrame(title);
         this.facade = new Facade(trainBlock);
@@ -106,12 +106,13 @@ public class MainWindow {
     }
 
     public static void main(String[] args) throws AlreadyBoundException, IOException, RemoteException, NotBoundException {
-        System.setProperty("java.awt.headless", "false");
         MainWindow mainWindow;
         Properties cfg = new Properties();
-            cfg.load(new FileInputStream("data.properties"));
-        mainWindow = new MainWindow("nome", Integer.parseInt(cfg.getProperty("myTrain")));
-       
+        cfg.load(new FileInputStream("data.properties"));
+        //mainWindow = new MainWindow("nome", Integer.parseInt(cfg.getProperty("myTrain")));
+        for (int i = 1; i <= 3; i++) {
+            mainWindow = new MainWindow("nome", i);
+        }
     }
 
 }

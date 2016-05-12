@@ -58,10 +58,9 @@ public class Server extends UnicastRemoteObject implements Runnable {
             LocateRegistry.createRegistry(port);
             Properties cfg = new Properties();
             cfg.load(new FileInputStream("data.properties"));
-            
             System.setProperty("java.rmi.server.hostname", cfg.getProperty("train"+train.getBlock()));
             Registry registry = LocateRegistry.getRegistry(port);
-//Registry registry = LocateRegistry.getRegistry(null, port, new SslRMIClientSocketFactory());
+            //Registry registry = LocateRegistry.getRegistry(null, port, new SslRMIClientSocketFactory());
             registry.rebind("Train" + train.getBlock(), train);
             System.err.println("Server online");
         } catch (RemoteException ex) {

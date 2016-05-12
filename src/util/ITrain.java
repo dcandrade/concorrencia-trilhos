@@ -27,7 +27,7 @@ public interface ITrain extends Remote {
 
     public Integer getBlock() throws RemoteException;
 
-    public int getSpeed() throws RemoteException;
+    public double getSpeed() throws RemoteException;
 
     public int getX() throws RemoteException;
 

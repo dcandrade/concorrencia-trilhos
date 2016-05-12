@@ -22,7 +22,7 @@ public class Rail extends JPanel implements Runnable {
     private final Color color;
     private final List<ITrain> trains;
     private final int trainBlock;
-    public static int REFRESH_RATE = 10;
+    public static int REFRESH_RATE = 40;
 
     public Rail(Color color, int trainBlock) {
         super();

@@ -50,7 +50,7 @@ public class Train extends UnicastRemoteObject implements ITrain, Comparable<Tra
     }
 
     @Override
-    public int getSpeed() {
+    public double getSpeed() {
         return this.engine.getSpeed();
     }
 
