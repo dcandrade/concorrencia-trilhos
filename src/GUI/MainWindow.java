@@ -106,12 +106,15 @@ public class MainWindow {
     }
 
     public static void main(String[] args) throws AlreadyBoundException, IOException, RemoteException, NotBoundException {
-        MainWindow mainWindow;
-        Properties cfg = new Properties();
-        cfg.load(new FileInputStream("data.properties"));
-        //mainWindow = new MainWindow("nome", Integer.parseInt(cfg.getProperty("myTrain")));
-        for (int i = 1; i <= 3; i++) {
-            mainWindow = new MainWindow("nome", i);
+        System.setProperty("javax.net.ssl.keyStore", "seguro.keystore");
+        System.setProperty("javax.net.ssl.trustStore", "seguro.keystore");
+        System.setProperty("javax.net.ssl.keyStorePassword", "123456");
+        try {
+            MainWindow mainWindow;
+            Properties cfg = new Properties();
+            cfg.load(new FileInputStream("data.properties"));
+            mainWindow = new MainWindow("Compartilhamento de Trilhos", Integer.parseInt(cfg.getProperty("myTrain")));
+        } catch (RemoteException ex) {
         }
     }
 

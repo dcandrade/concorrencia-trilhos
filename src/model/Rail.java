@@ -3,10 +3,13 @@ package model;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.FileInputStream;
+import java.io.IOException;
 import static java.lang.Thread.sleep;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -24,7 +27,7 @@ public class Rail extends JPanel implements Runnable {
     private final int trainBlock;
     public static int REFRESH_RATE = 100;
 
-    public Rail(Color color, int trainBlock) {
+    public Rail(Color color, int trainBlock) throws IOException {
         super();
         setLayout(null);
         setSize(994, 672);
@@ -32,6 +35,9 @@ public class Rail extends JPanel implements Runnable {
         repaint();
         this.color = color;
         this.trainBlock = trainBlock;
+         Properties cfg = new Properties();
+        cfg.load(new FileInputStream("data.properties"));
+        Rail.REFRESH_RATE = Integer.parseInt(cfg.getProperty("fps"));
     }
 
     private void startTrains() throws RemoteException {

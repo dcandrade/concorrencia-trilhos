@@ -58,7 +58,7 @@ public class Controller {
             Properties cfg = new Properties();
             cfg.load(new FileInputStream("data.properties"));
             String host =  cfg.getProperty("train"+key);
-            Registry registry = LocateRegistry.getRegistry(host, Controller.PORT+key);
+            Registry registry = LocateRegistry.getRegistry(host, Controller.PORT+key, new SslRMIClientSocketFactory());
             ITrain train = (ITrain) registry.lookup(hostname);
             this.trains.put(train.getBlock(), train);
             this.client.addTrain(train);
