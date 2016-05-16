@@ -1,3 +1,16 @@
+/**
+ * Componente Curricular: Módulo Integrador de Concorrência e Conectividade
+ * Autores: Daniel Andrade e Solenir Figuerêdo Data: 12/05/2016
+ *
+ * Declaramos que este código foi elaborado por nós em dupla e não contém nenhum
+ * trecho de código de outro colega ou de outro autor, tais como provindos de
+ * livros e apostilas, e páginas ou documentos eletrônicos da Internet. Qualquer
+ * trecho de código de outra autoria que uma citação para o não a nossa está
+ * destacado com autor e a fonte do código, e estamos cientes que estes trechos
+ * não serão considerados para fins de avaliação. Alguns trechos do código podem
+ * coincidir com de outros colegas pois estes foram discutidos em sessões
+ * tutorias.
+ */
 package Controller;
 
 import java.io.FileInputStream;
@@ -28,27 +41,45 @@ import GUI.Client;
 import util.ITrain;
 
 /**
- *
+ * Classe responsável por controlar, em parte, o funcionamento da aplicação
+ * de forma geral. Ela armazena o trem executado localmente, bem como
+ * os trens que participam da aplicação, ou seja, os trens remotos disponibilizados
+ * a partir do serviço RMI(Inovação de Método Remoto) pela linguagem Java.
+ * Além disso armazena uma instância da classe Cliente, a qual axiliará no 
+ * funcionamento da aplicação. Armazena também uma pora que será responsável por
+ * controlar o acesso a um objeto remoto, no nosso caso os trens. 
  * @author Daniel Andrade
  * @author Solenir Figuerêdo
  */
 public class Controller {
 
-    private static final int PORT = 1234;
+    private static final int PORT = 1234;  //Porta utilizada como parâmetro na "obtenção de objetos remotos"
+    private final ITrain myTrain; //Trem que será disponibilizado remotamente;
+    private final TreeMap<Integer, ITrain> trains; //TreeMap que armazena todos os trens que estão sendo executados;
+    private final Client client; //Client onde são feito alguns controles. Desabilitação de JSlider por exemplo.
 
-    private final ITrain myTrain;
-    private final TreeMap<Integer, ITrain> trains;
-    private final Client client;
-
+    /**
+     * Construtor da classe Controller, onde são instanciados os principais
+     * objetos utilizados pela classe Controller.
+     * @param trainBlock inteiro que representa o identificador do trem.
+     * @throws AlreadyBoundException execeção lançada pelo RMI durante associação, caso já tenha um objeto como mesmo nome.
+     * @throws FileNotFoundException associação RMI não encontrada.
+     * @throws IOException Problemas de entrada e saida de dados.
+     */
     public Controller(int trainBlock) throws AlreadyBoundException, FileNotFoundException, IOException {
-        this.myTrain = new Train(trainBlock);
-        this.client = new Client(myTrain);
+        this.myTrain = new Train(trainBlock); //Criação do objeto Train que será disponibilizado remotamente.
+        this.client = new Client(myTrain); //Insere objeto local no na classe Client.
 
-        this.trains = new TreeMap<>();
-        this.trains.put(myTrain.getBlock(), myTrain);
+        this.trains = new TreeMap<>(); //Instancia o Tree Map que conterá os objetos remotos;
+        this.trains.put(myTrain.getBlock(), myTrain); //Inserindo objeto no map dos trens;
 
+        /*Criação de um objeto server que será responsável por fazer a associação RMI
+         * de um objeto Train. Nele são passados como argumento o objeto que será associado
+         * e a porta que fará a interface entre ele e as chamdas de método remoto.
+         *
+         */        
         Server server = new Server(myTrain, PORT + trainBlock);
-        server.start();
+        server.start(); //Inicia a execução do objeto Server, afinal ele é um fluxo independente de execução. 
     }
 
     private ITrain addTrain(String hostname, int key) throws RemoteException, FileNotFoundException, IOException {
