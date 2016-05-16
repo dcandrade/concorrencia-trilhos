@@ -1,3 +1,4 @@
+
 /**
  * Componente Curricular: Módulo Integrador de Concorrência e Conectividade
  * Autores: Daniel Andrade e Solenir Figuerêdo Data: 12/05/2016
@@ -35,7 +36,7 @@ import javax.swing.JPanel;
 
 import model.Server;
 import model.Train;
-import model.TrainWatcher;
+import model.Election;
 import GUI.Client;
 
 import util.ITrain;
@@ -82,19 +83,7 @@ public class Controller {
         server.start(); //Inicia a execução do objeto Server, afinal ele é um fluxo independente de execução. 
     }
 
-    /**
-     * Método privado responsável por adiconar objetos remotos disponibilizados 
-     * pelo RMI, no TreeMap. Esse objetos são de significativa importancia, pois
-     * serão utilizados pela aplicação para fornecer as funcionalidades requeridas.
-     * 
-     * @param hostname nome utlizado quando foi feito o registro RMI.
-     * @param key identificador do trem;
-     * @return ITrain
-     * @throws RemoteException identifica problema na "importação" de um objeto remoto.
-     * @throws FileNotFoundException identifica um arquivo não encontrado.
-     * @throws IOException problema com entrada e saida de dados. 
-     */
-    private ITrain addTrain(String hostname, int key) throws RemoteException, FileNotFoundException, IOException {
+        private ITrain addTrain(String hostname, int key) throws RemoteException, FileNotFoundException, IOException {
         try {
            
             //Instancia de um objeto Properties que será utilizado para auxiliar na identificação do trem.
@@ -145,34 +134,55 @@ public class Controller {
                 }
             }
         }
-        //Intancia da classe TrainWatcher, uma das classes reponsáveis por controlar a entrada dos trens na região crítica.
-        TrainWatcher tw = new TrainWatcher(otherTrains, myTrain);
-        tw.start();//Inicia a Thread responsável por monitorar a entrada de trens na região crítica.
-        this.client.start(); //Inicia a Thread client.
-        this.client.repaintRail(); //Pinta/Repinta os objetos no JPanel utilizado para exibir os componentes da aplicação. 
+       //Instancia da classe Election. Ela é reponsável por controlar o acesso dos trens a região crítica.
+        Election tw = new Election(otherTrains, myTrain);
+        tw.start(); //Inicia a thread Election.
+        this.client.start(); //Inicia Thread Client.
+        this.client.repaintRail(); //Pinta/Repinta os objetos presentes no Jpanel que contém componentes da interface.
     }
 
-    
+    /**
+     * Método responsável por inicar a Thread que representa o trem local.
+     * @throws RemoteException  lança a execção caso o objeto remoto não esteja diponível.
+     */
     public void startMyTrain() throws RemoteException {
         this.myTrain.start();
     }
 
+    /**
+     * Método reponsável por modificar a velocidade do trem remotamente.
+     * @param block identificação do trem.
+     * @param speed nova velocidade que setá atribuida para o trem.
+     * @throws RemoteException 
+     */
     public void setSpeed(int block, int speed) throws RemoteException {
-        this.trains.get(block).setSpeed(speed);
+        this.trains.get(block).setSpeed(speed); //Modificando velocidade.
     }
-
+    
+    /**
+     * Método reponsável por "pegar um RailFrame".
+     * @return  um Rain
+     */
     public JPanel getFrame() {
         return this.client.getSliderFrame();
     }
 
+    /**
+     * Método reponsável por inserir os trens que estão em execução num ArrayList
+     * Com isso a sua iteração se torna mais simples. Desta forma temos um maior control
+     * sobre eles.
+     * @return um Iterator dos trens.
+     */
     public Iterator<ITrain> getTrains() {
-        List<ITrain> list = new ArrayList<>();
+        List<ITrain> list = new ArrayList<>(); // Objeto que representará a lista de trens.
 
+        ///Insere todos os trens na lista de trens.
         for (Integer x : this.trains.keySet()) {
             list.add(this.trains.get(x));
         }
 
-        return list.iterator();
+        return list.iterator(); //Retorna o iterator dessa lista de trens.
     }
 
 }
+
