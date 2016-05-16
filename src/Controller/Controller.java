@@ -110,38 +110,49 @@ public class Controller {
             ITrain train = (ITrain) registry.lookup(hostname); // "Importação" do objeto remoto.
             this.trains.put(train.getBlock(), train); //"Pega" o objeto remoto utilizado o seu identificador.
             this.client.addTrain(train); //Insere o trem remoto numa lista de trens.
-            return train;
-        } catch (NotBoundException | AccessException ex) {
-            System.err.println("Error while adding trains");
-            System.err.println(ex.getMessage());
-            return null;
+            return train; //Retorna o trem que foi inserido com sucesso.
+            
+        } catch (NotBoundException | AccessException ex) { //Caso alguma exceção seja lançada é capturada por esse bloco catch.
+            System.err.println("Error while adding trains"); //Erro ao inserir os trens.
+            System.err.println(ex.getMessage());//Exibe quais foram os erros;
+            return null; //Retorna nulo para indicar o erro.
         }
     }
 
+    /**
+     * Método responsável por iniciar a importação dos trens remotos. Ele juntamente
+     * com o método "addTrain" executa todo o processo de importação.
+     * @throws FileNotFoundException quando oarquivo não é encontrado;
+     * @throws IOException  problemas com entrada e saída.
+     */
     public void loadTrains() throws FileNotFoundException, IOException {
-        String hostname;
-        List<ITrain> otherTrains = new ArrayList<>();
+        String hostname; //Variável que auxiliará na importação.
+        List<ITrain> otherTrains = new ArrayList<>(); //Lista com trens remotos;
 
+        //Laço de repetição usado para controlar a inserção dos trens no TreeMap.
         for (int i = 1; i <= Train.NUM_TRAINS; i++) {
+            //Essa condição é utilizada para evitar que o trem local seja readicionado no TreeMap.
             if (i != this.myTrain.getBlock()) {
-                hostname = "Train" + i;
-                ITrain train = this.addTrain(hostname, i);
-
+                hostname = "Train" + i; //Nome que o objeto remoto foi registrado. Consiste do nome "Train" + seu identificador.
+                ITrain train = this.addTrain(hostname, i); //Chamda do método reponsável por importar os objetos remotos.
+                
+                //Condição que verifica se o trem foi adicionado com sucesso. 
                 if (train == null) {
-                    throw new NoSuchObjectException("Train #" + i + " not found");
-                } else {
-                    otherTrains.add(train);
-                    System.out.println("Train #" + i + " was sucessfully loaded");
+                    throw new NoSuchObjectException("Train #" + i + " not found"); //Exceção caso o trem não tenha sido adicionado.
+                } else { //Caso tenha adicionando com sucesso executa esse bloco.
+                    otherTrains.add(train); //Adiciona o trem inserido com sucesso nessa lista auxiliar;
+                    System.out.println("Train #" + i + " was sucessfully loaded"); //Exibe mensagem de sucesso com o nome do trem adicionado. 
                 }
             }
         }
-
+        //Intancia da classe TrainWatcher, uma das classes reponsáveis por controlar a entrada dos trens na região crítica.
         TrainWatcher tw = new TrainWatcher(otherTrains, myTrain);
-        tw.start();
-        this.client.start();
-        this.client.repaintRail();
+        tw.start();//Inicia a Thread responsável por monitorar a entrada de trens na região crítica.
+        this.client.start(); //Inicia a Thread client.
+        this.client.repaintRail(); //Pinta/Repinta os objetos no JPanel utilizado para exibir os componentes da aplicação. 
     }
 
+    
     public void startMyTrain() throws RemoteException {
         this.myTrain.start();
     }
