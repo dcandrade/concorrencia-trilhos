@@ -73,11 +73,4 @@ public class Server extends UnicastRemoteObject implements Runnable {
         }
     }
 
-    public static void main(String args[]) throws RemoteException, MalformedURLException, AlreadyBoundException {
-        ITrain t = new Train(TrainEngine.DOWN_RIGHT_BLOCK);
-        t.start();
-        Server server = new Server(t, 1234);
-        server.start();
-    }
-
-}
+  }
