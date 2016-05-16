@@ -82,17 +82,34 @@ public class Controller {
         server.start(); //Inicia a execução do objeto Server, afinal ele é um fluxo independente de execução. 
     }
 
+    /**
+     * Método privado responsável por adiconar objetos remotos disponibilizados 
+     * pelo RMI, no TreeMap. Esse objetos são de significativa importancia, pois
+     * serão utilizados pela aplicação para fornecer as funcionalidades requeridas.
+     * 
+     * @param hostname nome utlizado quando foi feito o registro RMI.
+     * @param key identificador do trem;
+     * @return ITrain
+     * @throws RemoteException identifica problema na "importação" de um objeto remoto.
+     * @throws FileNotFoundException identifica um arquivo não encontrado.
+     * @throws IOException problema com entrada e saida de dados. 
+     */
     private ITrain addTrain(String hostname, int key) throws RemoteException, FileNotFoundException, IOException {
         try {
-            //Registry registry = LocateRegistry.getRegistry(null, Controller.PORT + key, new SslRMIClientSocketFactory());
-            //Registry registry = LocateRegistry.getRegistry(Controller.PORT + key);
-            Properties cfg = new Properties();
-            cfg.load(new FileInputStream("data.properties"));
-            String host =  cfg.getProperty("train"+key);
+           
+            //Instancia de um objeto Properties que será utilizado para auxiliar na identificação do trem.
+            Properties cfg = new Properties(); 
+            cfg.load(new FileInputStream("data.properties")); //Carregando os dados que estão no arquivo data.properties.
+            String host =  cfg.getProperty("train"+key); //Ler o endereço Ip onde está um objeto remoto qualquer.
+            /*
+              Esta linha é reponsável por "importar" um registro que tenha como configuração os argumentos passados
+              É importante perceber que estamos passando também um objeto do tipo SslRMIClientSocketFactory()
+              pois o registro está utilizando criptografia Ssl, bem como autenticação para o servidor de registro.
+            */
             Registry registry = LocateRegistry.getRegistry(host, Controller.PORT+key, new SslRMIClientSocketFactory());
-            ITrain train = (ITrain) registry.lookup(hostname);
-            this.trains.put(train.getBlock(), train);
-            this.client.addTrain(train);
+            ITrain train = (ITrain) registry.lookup(hostname); // "Importação" do objeto remoto.
+            this.trains.put(train.getBlock(), train); //"Pega" o objeto remoto utilizado o seu identificador.
+            this.client.addTrain(train); //Insere o trem remoto numa lista de trens.
             return train;
         } catch (NotBoundException | AccessException ex) {
             System.err.println("Error while adding trains");
