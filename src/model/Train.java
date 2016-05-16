@@ -19,22 +19,39 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Comparator;
 
 /**
+ * Fachada para as operações de um Trem como objeto remoto.
  *
+ * @see TrainEngine
  * @author Daniel Andrade
  * @author Solenir Figuerêdo
  */
-public class Train extends UnicastRemoteObject implements ITrain, Comparable<Train> {
+public class Train extends UnicastRemoteObject implements ITrain {
 
+    /*Quantidade máxima de trens permitida. Como o número de quadrantes 
+     disponibilizados é 3, a quantidade deve ser menor ou igual a esse valor
+     */
     public static final int NUM_TRAINS = 3;
 
+    //Engine do trem para o controle de suas operações
     private final TrainEngine engine;
-    private boolean ready;
 
+    /**
+     * Construtor da classe Trem.
+     *
+     * @param trainBlock
+     * @throws RemoteException
+     */
     public Train(int trainBlock) throws RemoteException {
         super();
         this.engine = new TrainEngine(trainBlock);
     }
 
+    /**
+     * Comparador de trens com base na distância para a região crítica. Caso a
+     * distância seja a mesma, o quadrante do trem é analisado.
+     *
+     * @return Comparator entre trens
+     */
     public static Comparator<ITrain> getDistanceComparator() {
         return new Comparator<ITrain>() {
 
@@ -55,19 +72,7 @@ public class Train extends UnicastRemoteObject implements ITrain, Comparable<Tra
         };
     }
 
-    public static Comparator<ITrain> getBlockComparator() {
-        return new Comparator<ITrain>() {
-            @Override
-            public int compare(ITrain o1, ITrain o2) {
-                try {
-                    return Integer.compare(o1.getBlock(), o2.getBlock());
-                } catch (RemoteException ex) {
-                    return 0;
-                }
-            }
-        };
-    }
-
+    @Override
     public boolean isLimited() {
         return this.engine.isLimited();
     }
@@ -118,8 +123,8 @@ public class Train extends UnicastRemoteObject implements ITrain, Comparable<Tra
     }
 
     @Override
-    public void allowCriticalRegion() {
-        this.engine.allowCriticalRegion();
+    public void voteForCriticalRegion() {
+        this.engine.voteForCriticalRegion();
     }
 
     @Override
@@ -128,38 +133,8 @@ public class Train extends UnicastRemoteObject implements ITrain, Comparable<Tra
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o instanceof Train) {
-            return ((Train) o).compareTo(this) == 0;
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean noIsReady() throws RemoteException {
-
-        return this.ready;
-    }
-
-    @Override
-    public void setReady() throws RemoteException {
-        this.ready = true;
-    }
-
-    @Override
-    public int compareTo(Train o) {
-        return this.getBlock().compareTo(o.getBlock());
-    }
-
-    @Override
     public void exitCriticalRegion() throws RemoteException {
         this.engine.exitCriticalRegion();
-    }
-
-    @Override
-    public float distanceLeftExitCriticalRegion() throws RemoteException {
-        return this.engine.distanceLeftExitCriticalRegion();
     }
 
     public void unlimit() {

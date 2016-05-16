@@ -22,7 +22,7 @@ import javax.swing.JPanel;
 
 import model.Server;
 import model.Train;
-import model.TrainWatcher;
+import model.Election;
 import GUI.Client;
 
 import util.ITrain;
@@ -88,7 +88,7 @@ public class Controller {
             }
         }
 
-        TrainWatcher tw = new TrainWatcher(otherTrains, myTrain);
+        Election tw = new Election(otherTrains, myTrain);
         tw.start();
         this.client.start();
         this.client.repaintRail();
