@@ -17,7 +17,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- *
+ * Interface que define os métodos que serão disponibilizados para a invocação remota.
  * @author Daniel Andrade
  * @author Solenir Figuerêdo
  */

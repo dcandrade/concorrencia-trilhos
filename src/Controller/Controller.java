@@ -1,7 +1,7 @@
 
 /**
  * Componente Curricular: Módulo Integrador de Concorrência e Conectividade
- * Autores: Daniel Andrade e Solenir Figuerêdo Data: 12/05/2016
+ * Autores: Daniel Andrade e Solenir Figuerêdo Data: 17/04/2016
  *
  * Declaramos que este código foi elaborado por nós em dupla e não contém nenhum
  * trecho de código de outro colega ou de outro autor, tais como provindos de

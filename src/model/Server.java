@@ -30,39 +30,64 @@ import javax.rmi.ssl.SslRMIServerSocketFactory;
 import util.ITrain;
 
 /**
- *
+ * Classe reponsável por "registrar" um objeto remoto. ALém disso define o uso
+ * de criptigrafia usando o SSL, bem como o uso de Certificado. Tem como atributo
+ * a porta que seá utilziada para disponinilizar o objeto remoto, assim como 
+ * o objeto que representa o trem que será disponibilizado remotamente.
  * @author Daniel Andrade
  * @author Solenir Figuerêdo
  */
 public class Server extends UnicastRemoteObject implements Runnable {
 
-    private final int port;
-    private final ITrain train;
-
+    private final int port; //Porta de seviço.
+    private final ITrain train; //Trem que será disponibilizado remotamente.
+    
+    /**
+     * Construtor da classe Server. Ele é responsavel por definir os criterios de 
+     * criptografia bem como o uso de autenticação. Para deifnir esses dois
+     * serviços, foram usados classes classes disponibilizados justamente
+     * para auxiliar no processo de criptografia e autenticação com RMI.
+     * @param train objeto que será disponibilizado remotamente.
+     * @param port porta que será associada ao objeto remoto.
+     * @throws RemoteException
+     * @throws MalformedURLException
+     * @throws AlreadyBoundException 
+     */
     public Server(ITrain train, int port) throws RemoteException, MalformedURLException, AlreadyBoundException {
-        super(0,new SslRMIClientSocketFactory(), new SslRMIServerSocketFactory());
-        //super();
+        super(0,new SslRMIClientSocketFactory(), new SslRMIServerSocketFactory()); //Define criptografia e autenticação.
+       
         this.train = train;
         this.port = port;
     }
 
+    /**
+     * Método responsável por iniciar a execução da Thread Server.
+     */
     public void start() {
         Thread thread = new Thread(this);
         thread.start();
     }
 
+    /**
+     * Método responsável por realizar o registro do objeto remoto.
+     */
     @Override
     public void run() {
         try {
-            // LocateRegistry.createRegistry(port, new SslRMIClientSocketFactory(), new SslRMIServerSocketFactory(null, null, true));
-            //LocateRegistry.createRegistry(port);
-            Properties cfg = new Properties();
-            cfg.load(new FileInputStream("data.properties"));
-            System.setProperty("java.rmi.server.hostname", cfg.getProperty("train"+train.getBlock()));
-            //Registry registry = LocateRegistry.getRegistry(port);
+            //Instancia que auxiliará na obtenção do endereço Ip da máquina onde a aplicação é executada.
+            Properties cfg = new Properties(); 
+            cfg.load(new FileInputStream("data.properties")); //Carrega as informações do arquivo data.properties
+            //Cria uma realação de confiança com a máquina que executrá o objeto remoto.
+            System.setProperty("java.rmi.server.hostname", cfg.getProperty("train"+train.getBlock())); 
+           
+            //Cria um registro, definindo uma porta, e também a criptografia e autenticação.
             Registry registry = LocateRegistry.createRegistry(port, new SslRMIClientSocketFactory(), new SslRMIServerSocketFactory());
-            registry.rebind("Train" + train.getBlock(), train);
-            System.err.println("Server online");
+           
+            //Associa o objeto com um determinado nome que será utilizado para importá-lo na aplicação cliente.
+            registry.rebind("Train" + train.getBlock(), train); 
+            System.out.println("Server online"); //Informa que ocorreu tudo bem a inicialização do servidor. 
+        
+        //Caso alguma execeção seja lança algum desses catch capturará, exibindo no console qual foi o problema.
         } catch (RemoteException ex) {
             System.err.println("Error while starting server");
             System.err.println(ex.getLocalizedMessage());
